@@ -56,6 +56,13 @@ Public Sub openDocs(ByRef control As Office.IRibbonControl)
 End Sub
 
 ''
+' Handler of b-help-feedback
+''
+Public Sub openFeedback(ByRef control As Office.IRibbonControl)
+  UtilService.openUrl "https://forms.gle/M6EJkPMuHb9Bb5Ej7"
+End Sub
+
+''
 ' Handler of b-help-status
 ''
 Public Sub openStatus(ByRef control As Office.IRibbonControl)

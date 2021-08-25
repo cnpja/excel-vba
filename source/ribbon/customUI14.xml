@@ -237,10 +237,21 @@ Acesse nosso Guia Rápido, que resume tudo que precisa de forma sucinta e objeti
           <button
             id="b-help-status"
             label="Status do Serviço"
-            imageMso="TaskRespectLinks"
+            imageMso="FileServerMenu"
             onAction="CnpjaController.openStatus"
             screentip="Status do Serviço"
             supertip="Abra a página com a situação atual em tempo real do nosso serviço de consultas."
+          />
+
+          <!-- Help: Feedback -->
+          <button
+            id="b-help-feedback"
+            label="Enviar Feedback"
+            imageMso="ReportIssueGiveFeedback"
+            onAction="CnpjaController.openFeedback"
+            screentip="Enviar Feedback"
+            supertip="Problemas ou sugestões? Queremos te ouvir!&#13;&#13;
+Envie seus comentários sobre a ferramenta e entraremos em contato assim que possível."
           />
 
           <!-- Help: Version -->
