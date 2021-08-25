@@ -1,0 +1,255 @@
+<customUI onLoad="RibbonController.onLoad" xmlns="http://schemas.microsoft.com/office/2009/07/customui">
+  <ribbon startFromScratch="false">
+    <tabs>
+      <!-- CNPJá! Tab -->
+      <tab id="t-cnpja" label="CNPJá!" insertAfterMso="TabHome">
+
+        <!-- Account Group -->
+        <group id="g-account" label="Minha Conta">
+
+          <!-- Account: Name -->
+          <button
+            id="b-account-name"
+            getLabel="CnpjaController.getAccountName"
+            imageMso="AccessListContacts"
+            onAction="CnpjaController.openMe"
+            screentip="Acessar Minha Conta"
+            supertip="Abra a página de sua conta onde é possível:&#13;
+• Visualizar sua Chave de API&#13;
+• Gerenciar sua Assinatura&#13;
+• Ver Transações e Notas Fiscais"
+          />
+
+          <!-- Account: Credits -->
+          <button
+            id="b-account-credits"
+            getLabel="CnpjaController.getAccountCredits"
+            imageMso="CalculatedCurrency"
+            onAction="CnpjaController.openPlans"
+            screentip="Créditos Restantes"
+            supertip="Exibe a quantidade de créditos restantes. Todos os dias a meia-noite você recebe um refil de acordo com seu plano.&#13;&#13;
+Os créditos são consumidos ao executar consultas 'Online', ou seja, quando uma atualização em tempo real é necessária.&#13;&#13;
+Clique para acessar a página de planos e aprender mais sobre nossa precificação."
+          />
+
+          <!-- Account: API Key -->
+          <button
+            id="b-account-api-key"
+            label="Chave de API"
+            imageMso="AdpPrimaryKey"
+            onAction="CnpjaController.setApiKey"
+            screentip="Alterar Chave de API"
+            supertip="A Chave de API determina qual a conta na plataforma CNPJá! vinculada a este computador.&#13;&#13;
+Clique para alterar a chave cadastrada nesta máquina."
+          />
+        </group>
+
+        <!-- Queue Group -->
+        <group id="g-queue" label="Fila de Consultas">
+
+          <!-- Queue: Action (start/pause) -->
+          <button
+            id="b-queue-action"
+            getLabel="QueueController.getQueueActionLabel"
+            getImage="QueueController.getQueueActionImage"
+            size="large"
+            onAction="QueueController.startOrPauseQueue"
+            screentip="Iniciar ou Pausar Fila de Consultas"
+            supertip="Resume ou interrompe a execução dos itens adicionados a fila de consultas.&#13;&#13;
+Se a fila estiver vazia, você pode clicar em 'Consultar CNPJs' e marcá-los para busca."
+          />
+
+          <separator id="s-queue"/>
+
+          <!-- Queue: Retry -->
+          <button
+            id="b-queue-retry"
+            getLabel="QueueController.getQueueRetryLabel"
+            imageMso="RefreshCancel"
+            onAction="QueueController.retryQueue"
+            screentip="Reprocessar Falhas"
+            supertip="Execute novamente os itens da fila de consultas que resultaram em 'Falha'."
+          />
+
+          <!-- Queue: Concurrency -->
+          <menu
+            id="m-queue-concurrency"
+            label="Consultas Simultâneas"
+            imageMso="OrgChartRelayout"
+            screentip="Consultas Simultâneas"
+            supertip="Escolha quantas consultas devem ser enviadas ao mesmo tempo para a plataforma do CNPJá!&#13;&#13;
+Ao aumentar o número, sua fila será processada mais rápido. Entretando, resultará em uma maior taxa de consultas por minuto.&#13;&#13;
+O limite por minuto é definido pelo seu plano, e ao ultrapassá-lo a consulta resultará em 'Falha' com a mensagem de 'Limite por minuto excedido'."
+          >
+            <!-- Queue: Concurrency Options (one checkbox disable the others) -->
+            <menuSeparator id="ms-queue-concurrency-free" title="Plano FREE ou BASIC"/>
+            <checkBox id="cb-queue-concurrency-01" label="1" getPressed="QueueController.getQueueConcurrency" onAction="QueueController.setQueueConcurrency"/>
+            <menuSeparator id="ms-queue-concurrency-pro" title="Plano PRO"/>
+            <checkBox id="cb-queue-concurrency-02" label="2" getPressed="QueueController.getQueueConcurrency" onAction="QueueController.setQueueConcurrency"/>
+            <checkBox id="cb-queue-concurrency-03" label="3" getPressed="QueueController.getQueueConcurrency" onAction="QueueController.setQueueConcurrency"/>
+            <menuSeparator id="ms-queue-concurrency-premium" title="Plano PREMIUM"/>
+            <checkBox id="cb-queue-concurrency-04" label="4" getPressed="QueueController.getQueueConcurrency" onAction="QueueController.setQueueConcurrency"/>
+            <checkBox id="cb-queue-concurrency-05" label="5" getPressed="QueueController.getQueueConcurrency" onAction="QueueController.setQueueConcurrency"/>
+            <checkBox id="cb-queue-concurrency-06" label="6" getPressed="QueueController.getQueueConcurrency" onAction="QueueController.setQueueConcurrency"/>
+            <checkBox id="cb-queue-concurrency-07" label="7" getPressed="QueueController.getQueueConcurrency" onAction="QueueController.setQueueConcurrency"/>
+            <checkBox id="cb-queue-concurrency-08" label="8" getPressed="QueueController.getQueueConcurrency" onAction="QueueController.setQueueConcurrency"/>
+            <checkBox id="cb-queue-concurrency-09" label="9" getPressed="QueueController.getQueueConcurrency" onAction="QueueController.setQueueConcurrency"/>
+          </menu>
+        </group>
+
+        <!-- Office Group -->
+        <group id="g-office" label="Consulta CNPJ">
+
+          <!-- Office: Query -->
+          <button
+            id="b-office-query"
+            label="Consultar CNPJs"
+            imageMso="ArrangeByCompany"
+            size="large"
+            onAction="OfficeController.queryOffice"
+            screentip="Consultar CNPJs"
+            supertip="Selecione um intervalo contendo a lista de CNPJs que deseja consultar.&#13;&#13;
+Adquiri as informações de cadastro na Receita Federal.&#13;&#13;
+Os dados serão salvos nas planilhas:&#13;
+🏦 Estabelecimentos&#13;
+👤 Sócios e Administradores&#13;
+📞 Telefones&#13;
+📧 E-mails&#13;
+🌿 Atividades Econômicas"
+          />
+
+          <separator id="s-office"/>
+
+          <!-- Office: Simples -->
+          <toggleButton
+            id="tb-office-simples"
+            label="Simples Nacional"
+            imageMso="Piggy"
+            getPressed="RibbonController.getToggle"
+            onAction="RibbonController.setToggle"
+            screentip="Habilitar Simples Nacional"
+            supertip="Ativa ou desativa a aquisição das informações do Simples Nacional.&#13;&#13;
+Ao ativar, o botão receberá uma borda e fundo sombreado, e você estará sujeito a cobrança adicional de créditos.&#13;&#13;
+Os dados serão salvos na planilha:&#13;
+💰 Simples Nacional"
+          />
+
+          <!-- Office: CCC -->
+          <splitButton id="sb-office-ccc">
+            <toggleButton
+              id="tb-office-ccc"
+              label="Inscrições Estaduais"
+              imageMso="CreateMap"
+              getPressed="CccController.getCcc"
+              onAction="CccController.setCcc"
+              screentip="Habilitar Inscrições Estaduais"
+              supertip="Ativa ou desativa a aquisição das Inscrições Estaduais via Cadastro de Contribuintes.&#13;&#13;
+Ao ativar, o botão receberá uma borda e fundo sombreado, e você estará sujeito a cobrança adicional de créditos por estado selecionado.&#13;&#13;
+Os dados serão salvos na planilha:&#13;
+🌎 Inscrições Estaduais"
+            />
+            <menu id="m-office-ccc">
+              <!-- Office: CCC State All -->
+              <button
+                id="b-office-ccc-all"
+                label="Selecionar Todas"
+                imageMso="ApproveApprovalRequest"
+                onAction="CccController.setCccAll"
+              />
+              <!-- Office: CCC State None -->
+              <button 
+                id="b-office-ccc-none"
+                label="Limpar Seleção"
+                imageMso="ClearGrid"
+                onAction="CccController.setCccNone"
+              />
+              <!-- Office: CCC State Choices -->
+              <menuSeparator id="ms-office-ccc"/>
+              <checkBox id="cb-office-ccc-ac" label="Acre" getPressed="RibbonController.getToggle" onAction="RibbonController.setToggle"/>
+              <checkBox id="cb-office-ccc-al" label="Alagoas" getPressed="RibbonController.getToggle" onAction="RibbonController.setToggle"/>
+              <checkBox id="cb-office-ccc-ap" label="Amapá" getPressed="RibbonController.getToggle" onAction="RibbonController.setToggle"/>
+              <checkBox id="cb-office-ccc-am" label="Amazonas" getPressed="RibbonController.getToggle" onAction="RibbonController.setToggle"/>
+              <checkBox id="cb-office-ccc-ba" label="Bahia" getPressed="RibbonController.getToggle" onAction="RibbonController.setToggle"/>
+              <checkBox id="cb-office-ccc-ce" label="Ceará" getPressed="RibbonController.getToggle" onAction="RibbonController.setToggle"/>
+              <checkBox id="cb-office-ccc-df" label="Distrito Federal" getPressed="RibbonController.getToggle" onAction="RibbonController.setToggle"/>
+              <checkBox id="cb-office-ccc-es" label="Espírito Santo" getPressed="RibbonController.getToggle" onAction="RibbonController.setToggle"/>
+              <checkBox id="cb-office-ccc-go" label="Goiás" getPressed="RibbonController.getToggle" onAction="RibbonController.setToggle"/>
+              <checkBox id="cb-office-ccc-ma" label="Maranhão" getPressed="RibbonController.getToggle" onAction="RibbonController.setToggle"/>
+              <checkBox id="cb-office-ccc-mt" label="Mato Grosso" getPressed="RibbonController.getToggle" onAction="RibbonController.setToggle"/>
+              <checkBox id="cb-office-ccc-ms" label="Mato Grosso do Sul" getPressed="RibbonController.getToggle" onAction="RibbonController.setToggle"/>
+              <checkBox id="cb-office-ccc-mg" label="Minas Gerais" getPressed="RibbonController.getToggle" onAction="RibbonController.setToggle"/>
+              <checkBox id="cb-office-ccc-pa" label="Pará" getPressed="RibbonController.getToggle" onAction="RibbonController.setToggle"/>
+              <checkBox id="cb-office-ccc-pb" label="Paraíba" getPressed="RibbonController.getToggle" onAction="RibbonController.setToggle"/>
+              <checkBox id="cb-office-ccc-pr" label="Paraná" getPressed="RibbonController.getToggle" onAction="RibbonController.setToggle"/>
+              <checkBox id="cb-office-ccc-pe" label="Pernambuco" getPressed="RibbonController.getToggle" onAction="RibbonController.setToggle"/>
+              <checkBox id="cb-office-ccc-pi" label="Piauí" getPressed="RibbonController.getToggle" onAction="RibbonController.setToggle"/>
+              <checkBox id="cb-office-ccc-rj" label="Rio de Janeiro" getPressed="RibbonController.getToggle" onAction="RibbonController.setToggle"/>
+              <checkBox id="cb-office-ccc-rn" label="Rio Grande do Norte" getPressed="RibbonController.getToggle" onAction="RibbonController.setToggle"/>
+              <checkBox id="cb-office-ccc-rs" label="Rio Grande do Sul" getPressed="RibbonController.getToggle" onAction="RibbonController.setToggle"/>
+              <checkBox id="cb-office-ccc-ro" label="Rondônia" getPressed="RibbonController.getToggle" onAction="RibbonController.setToggle"/>
+              <checkBox id="cb-office-ccc-rr" label="Roraima" getPressed="RibbonController.getToggle" onAction="RibbonController.setToggle"/>
+              <checkBox id="cb-office-ccc-sc" label="Santa Catarina" getPressed="RibbonController.getToggle" onAction="RibbonController.setToggle"/>
+              <checkBox id="cb-office-ccc-sp" label="São Paulo" getPressed="RibbonController.getToggle" onAction="RibbonController.setToggle"/>
+              <checkBox id="cb-office-ccc-se" label="Sergipe" getPressed="RibbonController.getToggle" onAction="RibbonController.setToggle"/>
+              <checkBox id="cb-office-ccc-to" label="Tocantins" getPressed="RibbonController.getToggle" onAction="RibbonController.setToggle"/>
+            </menu>
+          </splitButton>
+
+          <!-- Office: Max Age -->
+          <menu
+            id="m-office-max-age"
+            label="Defasagem Máxima"
+            imageMso="ArrangeByDate"
+            screentip="Defasagem Máxima"
+            supertip="Configure o atraso máximo que aceita receber um dado previamente armazenado em nossa plataforma.&#13;&#13;
+Se já possuirmos as informações dentro deste intervalo de tempo, a consulta será resolvida em 'Cache', ou seja, não consumirá créditos.&#13;&#13;
+Por outro lado, as que não atenderem serão realizadas 'Online' e debitarão o valor correspondente do seu saldo em créditos."
+          >
+            <!-- Office: Max Age Choices (one checkbox disable the others) -->
+            <checkBox id="cb-office-max-age-001" label="24 horas" getPressed="OfficeController.getOfficeMaxAge" onAction="OfficeController.setOfficeMaxAge"/>
+            <checkBox id="cb-office-max-age-007" label="7 dias" getPressed="OfficeController.getOfficeMaxAge" onAction="OfficeController.setOfficeMaxAge"/>
+            <checkBox id="cb-office-max-age-015" label="15 dias" getPressed="OfficeController.getOfficeMaxAge" onAction="OfficeController.setOfficeMaxAge"/>
+            <checkBox id="cb-office-max-age-030" label="30 dias" getPressed="OfficeController.getOfficeMaxAge" onAction="OfficeController.setOfficeMaxAge"/>
+            <checkBox id="cb-office-max-age-090" label="3 meses" getPressed="OfficeController.getOfficeMaxAge" onAction="OfficeController.setOfficeMaxAge"/>
+            <checkBox id="cb-office-max-age-180" label="6 meses" getPressed="OfficeController.getOfficeMaxAge" onAction="OfficeController.setOfficeMaxAge"/>
+            <checkBox id="cb-office-max-age-365" label="1 ano" getPressed="OfficeController.getOfficeMaxAge" onAction="OfficeController.setOfficeMaxAge"/>
+          </menu>
+        </group>
+
+        <!-- Help Group -->
+        <group id="g-help" label="Ajuda">
+
+          <!-- Help: Documentation -->
+          <button
+            id="b-help-docs"
+            label="Guia Rápido"
+            size="large"
+            imageMso="HelpDevResources"
+            onAction="CnpjaController.openDocs"
+            screentip="Acessar o Guia Rápido"
+            supertip="Dúvidas sobre como utilizar a ferramenta?&#13;&#13;
+Acesse nosso Guia Rápido, que resume tudo que precisa de forma sucinta e objetiva."
+          />
+
+          <separator id="s-help"/>
+
+          <!-- Help: Status -->
+          <button
+            id="b-help-status"
+            label="Status do Serviço"
+            imageMso="TaskRespectLinks"
+            onAction="CnpjaController.openStatus"
+            screentip="Status do Serviço"
+            supertip="Abra a página com a situação atual em tempo real do nosso serviço de consultas."
+          />
+
+          <!-- Help: Version -->
+          <labelControl
+            id="lc-help-version"
+            label="  v1.0.0"
+          />
+        </group>
+      </tab>
+    </tabs>
+  </ribbon>
+</customUI>

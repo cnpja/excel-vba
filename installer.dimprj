@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<item>
+  <name>InstallerSave</name>
+  <version>1.1.1.0</version>
+  <appName>CNPJá! Excel Add-in</appName>
+  <appVersion>1.0.0</appVersion>
+  <appPublisher>CNPJA TECNOLOGIA LTDA</appPublisher>
+  <appWebsite>https://www.cnpja.com</appWebsite>
+  <installDirectoryCheckbox>False</installDirectoryCheckbox>
+  <license>False</license>
+  <licenseText></licenseText>
+  <licenseStyle>0</licenseStyle>
+  <customDisplayIcon>True</customDisplayIcon>
+  <customDisplayIconText>C:\Cloud\CNPJá!\Assets\logo\icon\512x512.ico</customDisplayIconText>
+  <customInstall>True</customInstall>
+  <customInstallText>C:\Cloud\CNPJá!\Assets\logo\icon\512x512.ico</customInstallText>
+  <customUninstall>True</customUninstall>
+  <customUninstallText>C:\Cloud\CNPJá!\Assets\logo\icon\512x512.ico</customUninstallText>
+  <installerLocation>C:\Cloud\MEGA\Projects\cnpja\excel-vba\release</installerLocation>
+  <installerName>cnpja.exe</installerName>
+  <MainDirectoryText>$APPDATA\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}</MainDirectoryText>
+  <KeepNSISScript>True</KeepNSISScript>
+  <currentGroupIndex>0</currentGroupIndex>
+  <currentFileIndex>0</currentFileIndex>
+  <currentShortcutIndex>0</currentShortcutIndex>
+  <StartMenuFolderNameRadioButton>1</StartMenuFolderNameRadioButton>
+  <InternetStartMenuCheckBox>False</InternetStartMenuCheckBox>
+  <UninstallStartMenuCheckBox>True</UninstallStartMenuCheckBox>
+  <FinishPageCheckBox1>False</FinishPageCheckBox1>
+  <FinishPageSelection1 />
+  <FinishPageCheckBox2>False</FinishPageCheckBox2>
+  <FinishPageSelection2 />
+  <langList>
+    <Lang>English</Lang>
+    <Lang>Portuguese (Brazilian)</Lang>
+  </langList>
+  <groupList>
+    <group>
+      <groupName>Main Group</groupName>
+      <groupItem>
+        <fileSource>C:\Cloud\MEGA\Projects\cnpja\excel-vba\release\cnpja.xlam</fileSource>
+        <fileFolder>$APPDATA\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}</fileFolder>
+        <fileExists>Always overwrite</fileExists>
+        <addinRegisterFlag>True</addinRegisterFlag>
+      </groupItem>
+    </group>
+  </groupList>
+  <shortcutList />
+  <DestinationList>
+    <DestinationListItem>$APPDATA\${PRODUCT_NAME}</DestinationListItem>
+    <DestinationListItem>$APPDATA\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}</DestinationListItem>
+    <DestinationListItem>$DOCUMENTS\${PRODUCT_NAME}</DestinationListItem>
+    <DestinationListItem>$DOCUMENTS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}</DestinationListItem>
+    <DestinationListItem>$FAVORITES\${PRODUCT_NAME}</DestinationListItem>
+    <DestinationListItem>$FAVORITES\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}</DestinationListItem>
+    <DestinationListItem>$INSTDIR</DestinationListItem>
+    <DestinationListItem>$MUSIC\${PRODUCT_NAME}</DestinationListItem>
+    <DestinationListItem>$MUSIC\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}</DestinationListItem>
+    <DestinationListItem>$PICTURES\${PRODUCT_NAME}</DestinationListItem>
+    <DestinationListItem>$PICTURES\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}</DestinationListItem>
+    <DestinationListItem>$PROFILE\${PRODUCT_NAME}</DestinationListItem>
+    <DestinationListItem>$PROFILE\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}</DestinationListItem>
+    <DestinationListItem>$PROGRAMFILES\${PRODUCT_NAME}</DestinationListItem>
+    <DestinationListItem>$PROGRAMFILES\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}</DestinationListItem>
+    <DestinationListItem>$RESOURCES\${PRODUCT_NAME}</DestinationListItem>
+    <DestinationListItem>$RESOURCES\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}</DestinationListItem>
+    <DestinationListItem>$RESOURCES_LOCALIZED\${PRODUCT_NAME}</DestinationListItem>
+    <DestinationListItem>$RESOURCES_LOCALIZED\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}</DestinationListItem>
+    <DestinationListItem>$SYSDIR\${PRODUCT_NAME}</DestinationListItem>
+    <DestinationListItem>$SYSDIR\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}</DestinationListItem>
+    <DestinationListItem>$TEMPLATES\${PRODUCT_NAME}</DestinationListItem>
+    <DestinationListItem>$TEMPLATES\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}</DestinationListItem>
+    <DestinationListItem>$VIDEOS\${PRODUCT_NAME}</DestinationListItem>
+    <DestinationListItem>$VIDEOS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}</DestinationListItem>
+    <DestinationListItem>$WINDIR\${PRODUCT_NAME}</DestinationListItem>
+    <DestinationListItem>$WINDIR\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}</DestinationListItem>
+  </DestinationList>
+</item>

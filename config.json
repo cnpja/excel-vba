@@ -1,0 +1,14 @@
+{
+  "app_name": "CNPJá!",
+  "description": "Add-in para Excel, escrito em VBA, que permite consultar as informações de uma empresa na Receita Federal, Simples Nacional e Cadastro de Contribuintes.",
+  "author": "CNPJA TECNOLOGIA LTDA",
+  "email": "contato@cnpja.com",
+  "create_ate": "2021-08-01",
+  "excel_file": "cnpja.xlsb",
+  "vba_folder": "source",
+  "ribbon_file": "customUI14",
+  "ribbon_folder": "source/ribbon",
+  "logs": "on",
+  "xvba_packages": {},
+  "xvba_dev_packages": {}
+}
