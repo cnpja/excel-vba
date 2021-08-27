@@ -3,7 +3,7 @@
   <name>InstallerSave</name>
   <version>1.1.1.0</version>
   <appName>CNPJá! Excel Add-in</appName>
-  <appVersion>1.0.0</appVersion>
+  <appVersion>v1.0.0</appVersion>
   <appPublisher>CNPJA TECNOLOGIA LTDA</appPublisher>
   <appWebsite>https://www.cnpja.com</appWebsite>
   <installDirectoryCheckbox>False</installDirectoryCheckbox>
@@ -11,17 +11,17 @@
   <licenseText></licenseText>
   <licenseStyle>0</licenseStyle>
   <customDisplayIcon>True</customDisplayIcon>
-  <customDisplayIconText>C:\Cloud\CNPJá!\Assets\logo\icon\512x512.ico</customDisplayIconText>
+  <customDisplayIconText>C:\Cloud\MEGA\Projects\cnpja\excel-vba\assets\logo_512x512.ico</customDisplayIconText>
   <customInstall>True</customInstall>
-  <customInstallText>C:\Cloud\CNPJá!\Assets\logo\icon\512x512.ico</customInstallText>
+  <customInstallText>C:\Cloud\MEGA\Projects\cnpja\excel-vba\assets\logo_512x512.ico</customInstallText>
   <customUninstall>True</customUninstall>
-  <customUninstallText>C:\Cloud\CNPJá!\Assets\logo\icon\512x512.ico</customUninstallText>
+  <customUninstallText>C:\Cloud\MEGA\Projects\cnpja\excel-vba\assets\logo_512x512.ico</customUninstallText>
   <installerLocation>C:\Cloud\MEGA\Projects\cnpja\excel-vba\release</installerLocation>
-  <installerName>cnpja.exe</installerName>
+  <installerName>cnpja</installerName>
   <MainDirectoryText>$APPDATA\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}</MainDirectoryText>
-  <KeepNSISScript>True</KeepNSISScript>
+  <KeepNSISScript>False</KeepNSISScript>
   <currentGroupIndex>0</currentGroupIndex>
-  <currentFileIndex>0</currentFileIndex>
+  <currentFileIndex>-1</currentFileIndex>
   <currentShortcutIndex>0</currentShortcutIndex>
   <StartMenuFolderNameRadioButton>1</StartMenuFolderNameRadioButton>
   <InternetStartMenuCheckBox>False</InternetStartMenuCheckBox>
@@ -36,7 +36,7 @@
   </langList>
   <groupList>
     <group>
-      <groupName>Main Group</groupName>
+      <groupName>CNPJá!</groupName>
       <groupItem>
         <fileSource>C:\Cloud\MEGA\Projects\cnpja\excel-vba\release\cnpja.xlam</fileSource>
         <fileFolder>$APPDATA\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}</fileFolder>
