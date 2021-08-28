@@ -141,7 +141,7 @@ Public Function loadData(Response As WebResponse)
 
     If member.Exists("agent") Then
       row(table.ListColumns("Representante Nome").Index) = member("agent")("person")("name")
-      row(table.ListColumns("Representante CPF / CNPJ").Index) = member("agent")("person")("taxId")
+      row(table.ListColumns("Representante CPF").Index) = member("agent")("person")("taxId")
       row(table.ListColumns("Representante Qualificação ID").Index) = member("agent")("role")("id")
       row(table.ListColumns("Representante Qualificação").Index) = member("agent")("role")("text")
     End If
