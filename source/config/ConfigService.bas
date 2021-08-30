@@ -83,6 +83,8 @@ End Function
 Public Function resetSettings()
   On Error Resume Next
   DeleteSetting "CNPJA", "ACCOUNT"
+  DeleteSetting "CNPJA", "OFFICE"
+  DeleteSetting "CNPJA", "QUEUE"
   DeleteSetting "CNPJA", "RIBBON"
   On Error GoTo 0
 End Function

@@ -100,10 +100,17 @@ End Function
 Public Function pauseRequests()
   Dim queueTable As ListObject
   Set queueTable = QueueSheet.getTable()
+
+  Application.DisplayAlerts = False
   queueTable.ListColumns("Situação").Range.Replace "Pendente", "Pausado"
   queueTable.ListColumns("Situação").Range.Replace "Processando", "Pausado"
   queueTable.ListColumns("Mensagem").Range.Replace "Em andamento, aguarde...", ""
+  Application.DisplayAlerts = True
+
+  ConfigService.setKey "QUEUE", "RUNNING", "False"
   RibbonController.refresh
+  DoEvents
+  End
 End Function
 
 ''
@@ -133,6 +140,16 @@ Public Function startRequests()
   Dim taxId As String
 
   maxConcurrency = CInt(ConfigService.getKey("QUEUE", "CONCURRENCY"))
+  If countProcessing() >= maxConcurrency Then Exit Function
+
+  If countPending() = 0 Then
+    ConfigService.setKey "QUEUE", "RUNNING", "False"
+    Exit Function
+  End If
+
+  disableUpdates
+  ConfigService.setKey "QUEUE", "RUNNING", "True"
+
   Set queueTable = QueueSheet.getTable()
 
   For Each queueRow In queueTable.ListRows
@@ -143,7 +160,9 @@ Public Function startRequests()
     Set requestDate = queueRow.Range.Cells(1, queueTable.ListColumns("Horário de Processamento").Index)
     Set requestMessage = queueRow.Range.Cells(1, queueTable.ListColumns("Mensagem").Index)
 
-    If requestStatus.Value = "Pendente" And countProcessing() < maxConcurrency Then
+    If requestStatus.Value = "Pendente" Then
+      If countProcessing() >= maxConcurrency Then Exit For
+
       requestDate.Value = Now
       requestStatus.Formula = "=IF((NOW()-[@[Horário de Processamento]])*1440>1,""Falha"",""Processando"")"
       requestMessage.Formula = "=IF((NOW()-[@[Horário de Processamento]])*1440>1,""Tempo de processamento excedido"",""Em andamento, aguarde..."")"
@@ -160,6 +179,8 @@ Public Function startRequests()
       End Select
     End If
   Next queueRow
+
+  CnpjaService.readMeCredit
 End Function
 
 ''
@@ -174,9 +195,7 @@ Public Function fulfillRequest(Response As WebResponse, requestIdValue As Long)
   Dim requestCost As Range
   Dim requestMessage As Range
 
-  Application.ScreenUpdating = False
-  Application.EnableEvents = False
-  Application.Calculation = xlCalculationManual
+  disableUpdates
 
   Set queueTable = QueueSheet.getTable()
   
@@ -249,11 +268,25 @@ Public Function fulfillRequest(Response As WebResponse, requestIdValue As Long)
     End If
   Next queueRow
 
-  CnpjaService.readMeCredit
+  enableUpdates
+  startRequests
+End Function
 
+''
+' Disables Excel update operations
+''
+Private Function disableUpdates()
+  Application.ScreenUpdating = False
+  Application.EnableEvents = False
+  Application.Calculation = xlCalculationManual
+End Function
+
+''
+' Re-enables Excel update operations
+''
+Private Function enableUpdates()
   Application.ScreenUpdating = True
   Application.EnableEvents = True
   Application.Calculation = xlCalculationAutomatic
-
-  startRequests
+  DoEvents
 End Function

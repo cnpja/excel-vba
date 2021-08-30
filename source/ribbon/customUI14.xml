@@ -47,16 +47,29 @@ Clique para alterar a chave cadastrada nesta máquina."
         <!-- Queue Group -->
         <group id="g-queue" label="Fila de Consultas">
 
-          <!-- Queue: Action (start/pause) -->
+          <!-- Queue: Start -->
           <button
-            id="b-queue-action"
-            getLabel="QueueController.getQueueActionLabel"
-            getImage="QueueController.getQueueActionImage"
+            id="b-queue-start"
+            getLabel="QueueController.getQueueStartLabel"
+            getVisible="QueueController.getQueueStartVisible"
+            imageMso="AnimationStartDropdown"
             size="large"
-            onAction="QueueController.startOrPauseQueue"
-            screentip="Iniciar ou Pausar Fila de Consultas"
-            supertip="Resume ou interrompe a execução dos itens adicionados a fila de consultas.&#13;&#13;
+            onAction="QueueController.startQueue"
+            screentip="Iniciar Fila de Consultas"
+            supertip="Inicia a execução dos itens adicionados a fila de consultas.&#13;&#13;
 Se a fila estiver vazia, você pode clicar em 'Consultar CNPJs' e marcá-los para busca."
+          />
+
+          <!-- Queue: Pause -->
+          <button
+            id="b-queue-pause"
+            getLabel="QueueController.getQueuePauseLabel"
+            getVisible="QueueController.getQueuePauseVisible"
+            imageMso="Media14PausePreview"
+            size="large"
+            onAction="QueueController.pauseQueue"
+            screentip="Pausar Fila de Consultas"
+            supertip="Interrompe a execução dos itens adicionados a fila de consultas"
           />
 
           <separator id="s-queue"/>
@@ -91,9 +104,6 @@ O limite por minuto é definido pelo seu plano, e ao ultrapassá-lo a consulta r
             <checkBox id="cb-queue-concurrency-04" label="4" getPressed="QueueController.getQueueConcurrency" onAction="QueueController.setQueueConcurrency"/>
             <checkBox id="cb-queue-concurrency-05" label="5" getPressed="QueueController.getQueueConcurrency" onAction="QueueController.setQueueConcurrency"/>
             <checkBox id="cb-queue-concurrency-06" label="6" getPressed="QueueController.getQueueConcurrency" onAction="QueueController.setQueueConcurrency"/>
-            <checkBox id="cb-queue-concurrency-07" label="7" getPressed="QueueController.getQueueConcurrency" onAction="QueueController.setQueueConcurrency"/>
-            <checkBox id="cb-queue-concurrency-08" label="8" getPressed="QueueController.getQueueConcurrency" onAction="QueueController.setQueueConcurrency"/>
-            <checkBox id="cb-queue-concurrency-09" label="9" getPressed="QueueController.getQueueConcurrency" onAction="QueueController.setQueueConcurrency"/>
           </menu>
         </group>
 
@@ -257,7 +267,7 @@ Envie seus comentários sobre a ferramenta e entraremos em contato assim que pos
           <!-- Help: Version -->
           <labelControl
             id="lc-help-version"
-            label="  v1.0.1"
+            label="  v1.0.2"
           />
         </group>
       </tab>

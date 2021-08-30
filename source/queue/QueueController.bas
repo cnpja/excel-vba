@@ -9,21 +9,32 @@ Attribute VB_Name = "QueueController"
 Option Explicit
 
 ''
-' Handler of b-queue-action
+' Getter of b-queue-start label
 ''
-Public Sub startOrPauseQueue(ByRef control As Office.IRibbonControl)
+Public Sub getQueueStartLabel(ByRef control As Office.IRibbonControl, ByRef label)
+  Dim queueOpen As Long
+  queueOpen = QueueService.countOpen
+  label = "Iniciar (" & queueOpen & ")"
+End Sub
+
+''
+' Getter of b-queue-start visible
+''
+Public Sub getQueueStartVisible(ByRef control As Office.IRibbonControl, ByRef visible)
+  Dim queueRunning As String
+  queueRunning = ConfigService.getKey("QUEUE", "RUNNING")
+  If queueRunning = "True" then visible = False Else visible = True
+End Sub
+
+''
+' Handler of b-queue-start
+''
+Public Sub startQueue(ByRef control As Office.IRibbonControl)
   Dim queueTable As ListObject
-  Dim queueProcessing As Long
   Dim queueOpen As Long
 
   Set queueTable = QueueSheet.getTable()
-  queueProcessing = QueueService.countProcessing()
   queueOpen = QueueService.countOpen()
-  
-  If queueProcessing > 0 Then
-    QueueService.pauseRequests
-    Exit Sub
-  End If
 
   If queueOpen = 0 Then
     MsgBox "A fila de consultas está vazia!" & vbCrLf & vbCrLf & _
@@ -37,42 +48,36 @@ Public Sub startOrPauseQueue(ByRef control As Office.IRibbonControl)
 End Sub
 
 ''
-' Getter of b-queue-action image
+' Getter of b-queue-pause label
 ''
-Public Sub getQueueActionImage(ByRef control As Office.IRibbonControl, ByRef image)
-  Dim queueProcessing As Long
-  queueProcessing = QueueService.countProcessing()
-
-  If queueProcessing > 0 Then
-    image = "Media14PausePreview"
-  Else
-    image = "AnimationStartDropdown"
-  End If
-End Sub
-
-''
-' Getter of b-queue-action label
-''
-Public Sub getQueueActionLabel(ByRef control As Office.IRibbonControl, ByRef label)
-  Dim queueProcessing As Long
+Public Sub getQueuePauseLabel(ByRef control As Office.IRibbonControl, ByRef label)
   Dim queueOpen As Long
-
-  queueProcessing = QueueService.countProcessing()
-  queueOpen = QueueService.countOpen()
-
-  If queueProcessing > 0 Then
-    label = "Pausar (" & countOpen & ")"
-  Else
-    label = "Iniciar (" & countOpen & ")"
-  End If
+  queueOpen = QueueService.countOpen
+  label = "Pausar (" & queueOpen & ")"
 End Sub
 
 ''
-' Getter of b-queue-error label
+' Getter of b-queue-pause visible
+''
+Public Sub getQueuePauseVisible(ByRef control As Office.IRibbonControl, ByRef visible)
+  Dim queueRunning As String
+  queueRunning = ConfigService.getKey("QUEUE", "RUNNING")
+  If queueRunning = "True" then visible = True Else visible = False
+End Sub
+
+''
+' Handler of b-queue-pause
+''
+Public Sub pauseQueue(ByRef control As Office.IRibbonControl)
+  QueueService.pauseRequests
+End Sub
+
+''
+' Getter of b-queue-retry label
 ''
 Public Sub getQueueRetryLabel(ByRef control As Office.IRibbonControl, ByRef label)
   Dim queueError As Long
-  queueError = QueueService.countError()
+  queueError = QueueService.countError
   label = "Reprocessar Falhas (" & queueError & ")"
 End Sub
 

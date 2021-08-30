@@ -52,7 +52,7 @@ End Sub
 ' Handler of b-help-docs
 ''
 Public Sub openDocs(ByRef control As Office.IRibbonControl)
-  UtilService.openUrl "https://docs.cnpja.com/excel"
+  UtilService.openUrl "https://docs.cnpja.com/excel/usage"
 End Sub
 
 ''
