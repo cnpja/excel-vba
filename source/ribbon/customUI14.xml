@@ -255,12 +255,12 @@ Acesse nosso Guia Rápido, que resume tudo que precisa de forma sucinta e objeti
 
           <!-- Help: Feedback -->
           <button
-            id="b-help-feedback"
-            label="Enviar Feedback"
+            id="b-help-ticket"
+            label="Suporte ao Cliente"
             imageMso="ReportIssueGiveFeedback"
-            onAction="CnpjaController.openFeedback"
-            screentip="Enviar Feedback"
-            supertip="Problemas ou sugestões? Queremos te ouvir!&#13;&#13;
+            onAction="CnpjaController.createTicket"
+            screentip="Suporte ao Cliente"
+            supertip="Dúvidas, problemas ou sugestões? Queremos te ouvir!&#13;&#13;
 Envie seus comentários sobre a ferramenta e entraremos em contato assim que possível."
           />
 

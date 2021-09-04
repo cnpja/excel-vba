@@ -56,10 +56,18 @@ Public Sub openDocs(ByRef control As Office.IRibbonControl)
 End Sub
 
 ''
-' Handler of b-help-feedback
+' Handler of b-help-ticket
 ''
-Public Sub openFeedback(ByRef control As Office.IRibbonControl)
-  UtilService.openUrl "https://forms.gle/M6EJkPMuHb9Bb5Ej7"
+Public Sub createTicket(ByRef control As Office.IRibbonControl)
+  Dim message As String
+
+  message = InputBox("Como podemos ajudar?", "CNPJá! Atendimento")
+  If message = Empty Then Exit Sub
+
+  CnpjaService.createMeTicket(message)
+
+  MsgBox "Agradecemos o contato!" & vbCrLf & vbCrLf & _
+    "Responderemos sua mensagem via e-mail em breve.", vbInformation, "CNPJá! Atendimento"
 End Sub
 
 ''

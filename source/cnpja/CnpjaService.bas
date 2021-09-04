@@ -59,6 +59,26 @@ Public Function readMeCredit() As WebResponse
 End Function
 
 ''
+' [Sync] Create ticket
+''
+Public Function createMeTicket(message As String) As WebResponse
+  Dim Request As New WebRequest
+  Dim Body As Dictionary
+  Dim name As String
+
+  name = ConfigService.getKey("ACCOUNT", "NAME")
+  Set Body = New Dictionary
+  Body.Add "subject", "[Excel] Atendimento " & name
+  Body.Add "body", message
+
+  Set Request.Body = Body
+  Request.Method = WebMethod.HttpPost
+  Request.Resource = "me/ticket"
+
+  Set createMeTicket = Cnpja.Client.Execute(Request)
+End Function
+
+''
 ' [Async] Read an office by its tax id (CNPJ)
 ''
 Public Function readOfficeByTaxId(requestId As Long, taxId As String)
