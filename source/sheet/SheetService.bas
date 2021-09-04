@@ -12,9 +12,14 @@ Option Explicit
 ' Get a reference to target table or return nothing
 ''
 Public Function getTable(tableName As String) As ListObject
+  Dim tableRange As Range
+
   On Error Resume Next
-  Set getTable = Application.Range(tableName).ListObject
+  Set tableRange = Application.Range(tableName)
   On Error GoTo 0
+
+  If tableRange Is Nothing Then Exit Function
+  Set getTable = tableRange.ListObject
 End Function
 
 ''

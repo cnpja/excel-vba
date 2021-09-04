@@ -203,12 +203,7 @@ Private Sub web_RunCallback(web_Response As WebResponse)
     If Me.Callback <> "" Then
         WebHelpers.LogDebug Me.Callback, "WebAsyncWrapper.RunCallback"
         If Not IsMissing(Me.CallbackArgs) Then
-            ' //FIXME: Find a workaround for failures
-            ' If the user switch tabs or follows a hyperlink right before the fulfillment,
-            ' this call will fail because the referente to the application is lost
-            On Error Resume Next
-            Application.Run Me.Callback, web_Response, Me.CallbackArgs
-            On Error GoTo 0
+            QueueService.fulfillRequest web_Response, Me.CallbackArgs
         Else
             Application.Run Me.Callback, web_Response
         End If

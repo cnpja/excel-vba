@@ -8,15 +8,21 @@ Attribute VB_Name = "QueueSheet"
 ''
 Option Explicit
 
+Private tableReference As ListObject
+
 ''
 ' Acquires reference to target table creating if necessary
 ''
-Public Function getTable() As ListObject
+Public Function getTable(Optional skipCreation As Boolean) As ListObject
   Dim columns() As Variant
   Dim newSheet As Worksheet
 
-  Set getTable = SheetService.getTable("CNPJA_FILA")
-  If Not getTable Is Nothing Then Exit Function
+  If tableReference is Nothing Then
+    Set tableReference = SheetService.getTable("CNPJA_FILA")
+  End If
+
+  Set getTable = tableReference
+  If Not getTable Is Nothing Or skipCreation Then Exit Function
 
   columns = Array( _
     "ID", _

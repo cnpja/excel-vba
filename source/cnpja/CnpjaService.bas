@@ -28,13 +28,6 @@ Private Property Get Cnpja() As WebAsyncWrapper
 End Property
 
 ''
-' Builds the callback application run string
-''
-Private Function getCallback() As String
-  getCallback = "'" & ThisWorkbook.FullName & "'!QueueService.fulfillRequest"
-End Function
-
-''
 ' [Sync] Read self data
 ''
 Public Function readMe() As WebResponse
@@ -87,7 +80,7 @@ Public Function readOfficeByTaxId(requestId As Long, taxId As String)
   buildOfficeMaxAge Request
   buildOfficeEmbeds Request
   Request.AddQuerystringParam "sync", "true"
-  Cnpja.ExecuteAsync Request, getCallback, requestId
+  Cnpja.ExecuteAsync Request, "callback", requestId
 End Function
 
 ''

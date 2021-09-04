@@ -13,7 +13,7 @@ Option Explicit
 ''
 Public Sub getQueueStartLabel(ByRef control As Office.IRibbonControl, ByRef label)
   Dim queueUnstarted As Long
-  queueUnstarted = QueueService.countUnstarted
+  queueUnstarted = QueueService.countPaused + QueueService.countPending
   label = "Iniciar (" & queueUnstarted & ")"
 End Sub
 
@@ -21,9 +21,9 @@ End Sub
 ' Getter of b-queue-start visible
 ''
 Public Sub getQueueStartVisible(ByRef control As Office.IRibbonControl, ByRef visible)
-  Dim queueRunning As String
-  queueRunning = ConfigService.getKey("QUEUE", "RUNNING")
-  If queueRunning = "True" Then visible = False Else visible = True
+  Dim queueProcessing As Long
+  queueProcessing = QueueService.countProcessing
+  If queueProcessing = 0 Then visible = True Else visible = False
 End Sub
 
 ''
@@ -34,7 +34,7 @@ Public Sub startQueue(ByRef control As Office.IRibbonControl)
   Dim queueUnstarted As Long
 
   Set queueTable = QueueSheet.getTable()
-  queueUnstarted = QueueService.countUnstarted()
+  queueUnstarted = QueueService.countPending + QueueService.countPaused
 
   If queueUnstarted = 0 Then
     MsgBox "A fila de consultas está vazia!" & vbCrLf & vbCrLf & _
@@ -43,6 +43,7 @@ Public Sub startQueue(ByRef control As Office.IRibbonControl)
     Exit Sub
   End If
 
+  CnpjaService.readMeCredit
   queueTable.ListColumns("Situação").Range.Replace "Pausado", "Pendente"
   QueueService.startRequests
 End Sub
@@ -52,7 +53,7 @@ End Sub
 ''
 Public Sub getQueuePauseLabel(ByRef control As Office.IRibbonControl, ByRef label)
   Dim queueOpen As Long
-  queueOpen = QueueService.countOpen
+  queueOpen = QueueService.countProcessing + QueueService.countPending
   label = "Pausar (" & queueOpen & ")"
 End Sub
 
@@ -60,9 +61,9 @@ End Sub
 ' Getter of b-queue-pause visible
 ''
 Public Sub getQueuePauseVisible(ByRef control As Office.IRibbonControl, ByRef visible)
-  Dim queueRunning As String
-  queueRunning = ConfigService.getKey("QUEUE", "RUNNING")
-  If queueRunning = "True" Then visible = True Else visible = False
+  Dim queueProcessing As Long
+  queueProcessing = QueueService.countProcessing
+  If queueProcessing > 0 Then visible = True Else visible = False
 End Sub
 
 ''

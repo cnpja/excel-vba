@@ -42,20 +42,6 @@ Public Function countProcessing() As Long
 End Function
 
 ''
-' Count pending and paused items
-''
-Public Function countUnstarted() As Long
-  countUnstarted = countPending() + countPaused()
-End Function
-
-''
-' Count processing, pending and paused items
-''
-Public Function countOpen() As Long
-  countOpen = countPending() + countPaused() + countProcessing()
-End Function
-
-''
 ' Count error items
 ''
 Public Function countError() As Long
@@ -114,8 +100,7 @@ Public Function pauseRequests()
   queueTable.ListColumns("Mensagem").Range.Replace "Em andamento, aguarde...", ""
   Application.DisplayAlerts = True
 
-  ConfigService.setKey "QUEUE", "RUNNING", "False"
-  RibbonController.refresh
+  CnpjaService.readMeCredit
   DoEvents
   End
 End Function
@@ -153,11 +138,10 @@ Public Function startRequests()
   If countProcessing() >= maxConcurrency Then Exit Function
 
   If countPending() = 0 Then
-    ConfigService.delKey "QUEUE", "RUNNING"
+    CnpjaService.readMeCredit
     Exit Function
   End If
 
-  ConfigService.setKey "QUEUE", "RUNNING", "True"
   Set queueTable = QueueSheet.getTable()
 
   For Each queueRow In queueTable.ListRows
@@ -189,7 +173,6 @@ Public Function startRequests()
   Next queueRow
 
   ConfigService.delKey "QUEUE", "STARTING"
-  'CnpjaService.readMeCredit
 End Function
 
 ''
