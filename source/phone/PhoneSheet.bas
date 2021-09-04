@@ -61,7 +61,7 @@ Public Function loadData(Response As WebResponse)
   For Each phone In Response.Data("phones")
     Set row = table.ListRows.Add.Range
 
-    UtilService.createTaxIdLink row(table.ListColumns("Estabelecimento").Index), Response.Data("taxId")
+    row(table.ListColumns("Estabelecimento").Index) = Response.Data("taxId")
     row(table.ListColumns("Razão Social").Index) = Response.Data("company")("name")
     row(table.ListColumns("DDD").Index) = phone("area")
     row(table.ListColumns("Número").Index) = phone("number")

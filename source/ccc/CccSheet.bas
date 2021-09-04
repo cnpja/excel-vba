@@ -75,7 +75,7 @@ Public Function loadData(Response As WebResponse)
   For Each registration In Response.Data("registrations")
     Set row = table.ListRows.Add.Range
 
-    UtilService.createTaxIdLink row(table.ListColumns("Estabelecimento").Index), Response.Data("taxId")
+    row(table.ListColumns("Estabelecimento").Index) = Response.Data("taxId")
     row(table.ListColumns("Razão Social").Index) = Response.Data("company")("name")
     row(table.ListColumns("Estado").Index) = registration("state")
     row(table.ListColumns("Inscrição Estadual").Index) = registration("number")

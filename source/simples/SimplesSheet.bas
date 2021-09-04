@@ -76,7 +76,7 @@ Public Function loadData(Response As WebResponse)
   Set table = getTable()
   Set row = SheetService.getRow(table, "Estabelecimento", Response.Data("taxId"))
 
-  UtilService.createTaxIdLink row(table.ListColumns("Estabelecimento").Index), Response.Data("taxId")
+  row(table.ListColumns("Estabelecimento").Index) = Response.Data("taxId")
   row(table.ListColumns("Razão Social").Index) = Response.Data("company")("name")
   row(table.ListColumns("Simples Nacional Optante").Index) = UtilService.booleanToString(Response.Data("company")("simples")("optant"))
   row(table.ListColumns("Simples Nacional Inclusão").Index) = Response.Data("company")("simples")("since")

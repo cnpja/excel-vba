@@ -147,9 +147,7 @@ Public Function startRequests()
     Exit Function
   End If
 
-  disableUpdates
   ConfigService.setKey "QUEUE", "RUNNING", "True"
-
   Set queueTable = QueueSheet.getTable()
 
   For Each queueRow In queueTable.ListRows
@@ -207,12 +205,13 @@ Public Function fulfillRequest(Response As WebResponse, requestIdValue As Long)
     Set requestMessage = queueRow.Range.Cells(1, queueTable.ListColumns("Mensagem").Index)
 
     If requestId.Value = requestIdValue Then
-      requestCost.Value = FindInKeyValues(Response.Headers, "Cnpja-Request-Cost")
+      requestCost.Value = FindInKeyValues(Response.Headers, "cnpja-request-cost")
 
       Select Case Response.StatusCode
         Case 200
           requestStatus.Value = "Sucesso"
-          
+          requestMessage.Value = ""
+
           Select Case requestType.Value
             Case "CNPJ"
               OfficeSheet.loadData Response
@@ -222,13 +221,6 @@ Public Function fulfillRequest(Response As WebResponse, requestIdValue As Long)
               ActivitySheet.loadData Response
               SimplesSheet.loadData Response
               CccSheet.loadData Response
-
-              UtilService.createLink _
-                requestMessage, _
-                "CNPJA_ESTABELECIMENTOS", _
-                "Estabelecimento", _
-                Response.Data("taxId"), _
-                """Ver: " & Response.Data("taxId") & """"
           End Select
 
         Case 400

@@ -211,8 +211,6 @@ Public Function loadData(Response As WebResponse)
   Set table = getTable()
   Set row = SheetService.getRow(table, "Estabelecimento", Response.Data("taxId"))
 
-  row(table.ListColumns("Estabelecimento").Index).NumberFormat = "@"
-
   row(table.ListColumns("Estabelecimento").Index) = Response.Data("taxId")
   row(table.ListColumns("Razão Social").Index) = Response.Data("company")("name")
   row(table.ListColumns("Porte ID").Index) = Response.Data("company")("size")("id")
@@ -251,9 +249,12 @@ Public Function loadData(Response As WebResponse)
     row(table.ListColumns("Situação Especial Data").Index) = Response.Data("specialDate")
   End If
 
-  UtilService.createCountLink row(table.ListColumns("Sócios").Index), Response.Data("taxId"), "CNPJA_SOCIOS"
-  UtilService.createCountLink row(table.ListColumns("Telefones").Index), Response.Data("taxId"), "CNPJA_TELEFONES"
-  UtilService.createCountLink row(table.ListColumns("E-mails").Index), Response.Data("taxId"), "CNPJA_EMAILS"
-  UtilService.createCountLink row(table.ListColumns("Atividades Secundárias").Index), Response.Data("taxId"), "CNPJA_ATIVIDADES"
-  UtilService.createCountLink row(table.ListColumns("Inscrições Estaduais").Index), Response.Data("taxId"), "CNPJA_CCC"
+  row(table.ListColumns("Sócios").Index) = Response.Data("company")("members").Count
+  row(table.ListColumns("Telefones").Index) = Response.Data("phones").Count
+  row(table.ListColumns("E-mails").Index) = Response.Data("emails").Count
+  row(table.ListColumns("Atividades Secundárias").Index) = Response.Data("sideActivities").Count
+
+  If Response.Data.Exists("registrations") Then
+    row(table.ListColumns("Inscrições Estaduais").Index) = Response.Data("registrations").Count
+  End If
 End Function

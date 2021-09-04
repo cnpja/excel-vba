@@ -116,7 +116,7 @@ Public Function loadData(Response As WebResponse)
   For Each member In Response.Data("company")("members")
     Set row = table.ListRows.Add.Range
 
-    UtilService.createTaxIdLink row(table.ListColumns("Estabelecimento").Index), Response.Data("taxId")
+    row(table.ListColumns("Estabelecimento").Index) = Response.Data("taxId")
     row(table.ListColumns("Razão Social").Index) = Response.Data("company")("name")
     row(table.ListColumns("Data de Entrada").Index) = member("since")
     row(table.ListColumns("Nome").Index) = member("person")("name")

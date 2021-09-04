@@ -60,7 +60,7 @@ Public Function loadData(Response As WebResponse)
   For Each email In Response.Data("emails")
     Set row = table.ListRows.Add.Range
 
-    UtilService.createTaxIdLink row(table.ListColumns("Estabelecimento").Index), Response.Data("taxId")
+    row(table.ListColumns("Estabelecimento").Index) = Response.Data("taxId")
     row(table.ListColumns("Razão Social").Index) = Response.Data("company")("name")
     row(table.ListColumns("Endereço").Index) = email("address")
     row(table.ListColumns("Domínio").Index) = email("domain")

@@ -64,7 +64,7 @@ Public Function loadData(Response As WebResponse)
   SheetService.deleteRowsById table, "Estabelecimento", Response.Data("taxId")
  
   Set row = table.ListRows.Add.Range
-  UtilService.createTaxIdLink row(table.ListColumns("Estabelecimento").Index), Response.Data("taxId")
+  row(table.ListColumns("Estabelecimento").Index) = Response.Data("taxId")
   row(table.ListColumns("Razão Social").Index) = Response.Data("company")("name")
   row(table.ListColumns("Principal").Index) = "Sim"
   row(table.ListColumns("Atividade Econômica ID").Index) = Response.Data("mainActivity")("id")
@@ -74,7 +74,7 @@ Public Function loadData(Response As WebResponse)
   For Each activity In Response.Data("sideActivities")
     Set row = table.ListRows.Add.Range
 
-    UtilService.createTaxIdLink row(table.ListColumns("Estabelecimento").Index), Response.Data("taxId")
+    row(table.ListColumns("Estabelecimento").Index) = Response.Data("taxId")
     row(table.ListColumns("Razão Social").Index) = Response.Data("company")("name")
     row(table.ListColumns("Principal").Index) = "Não"
     row(table.ListColumns("Atividade Econômica ID").Index) = activity("id")
