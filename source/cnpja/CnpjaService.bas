@@ -52,6 +52,16 @@ Public Function readMeCredit() As WebResponse
 End Function
 
 ''
+' [Sync] Generate self dashboard link
+''
+Public Function readMeDashboard() As WebResponse
+  Dim Request As New WebRequest
+
+  Request.Resource = "me/dashboard"
+  Set readMeDashboard = Cnpja.Client.Execute(Request)
+End Function
+
+''
 ' [Sync] Create ticket
 ''
 Public Function createMeTicket(message As String) As WebResponse

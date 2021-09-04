@@ -14,7 +14,7 @@
             imageMso="AccessListContacts"
             onAction="CnpjaController.openMe"
             screentip="Acessar Minha Conta"
-            supertip="Abra a página de sua conta onde é possível:&#13;
+            supertip="Abre a página de sua conta onde é possível:&#13;
 • Visualizar sua Chave de API&#13;
 • Gerenciar sua Assinatura&#13;
 • Ver Transações e Notas Fiscais"
@@ -81,7 +81,17 @@ Se a fila estiver vazia, você pode clicar em 'Consultar CNPJs' e marcá-los par
             imageMso="RefreshCancel"
             onAction="QueueController.retryQueue"
             screentip="Reprocessar Falhas"
-            supertip="Execute novamente os itens da fila de consultas que resultaram em 'Falha'."
+            supertip="Executa novamente os itens da fila de consultas que resultaram em 'Falha'."
+          />
+
+          <!-- Queue: Dashboard -->
+          <button
+            id="b-queue-dashboard"
+            label="Dashboard de Utilização"
+            imageMso="ChartTypeLineInsertDialog"
+            onAction="QueueController.openDashboard"
+            screentip="Dashboard de Utilização"
+            supertip="Abre o seu histórico pessoal de consultas, onde é possível visualizar estatísticas de utilização."
           />
 
           <!-- Queue: Concurrency -->
@@ -118,7 +128,7 @@ O limite por minuto é definido pelo seu plano, e ao ultrapassá-lo a consulta r
             size="large"
             onAction="OfficeController.queryOffice"
             screentip="Consultar CNPJs"
-            supertip="Selecione um intervalo contendo a lista de CNPJs que deseja consultar.&#13;&#13;
+            supertip="Abre uma caixa de seleção para que escolha um intervalo contendo a lista de CNPJs que deseja consultar.&#13;&#13;
 Adquiri as informações de cadastro na Receita Federal.&#13;&#13;
 Os dados serão salvos nas planilhas:&#13;
 🏦 Estabelecimentos&#13;
@@ -236,9 +246,8 @@ Por outro lado, as que não atenderem serão realizadas 'Online' e debitarão o 
             size="large"
             imageMso="HelpDevResources"
             onAction="CnpjaController.openDocs"
-            screentip="Acessar o Guia Rápido"
-            supertip="Dúvidas sobre como utilizar a ferramenta?&#13;&#13;
-Acesse nosso Guia Rápido, que resume tudo que precisa de forma sucinta e objetiva."
+            screentip="Guia Rápido"
+            supertip="Abre o Guia Rápido CNPJá!, que resume tudo que precisa saber para utilizar a ferramenta de forma sucinta e objetiva."
           />
 
           <separator id="s-help"/>

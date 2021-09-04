@@ -98,6 +98,15 @@ Public Sub retryQueue(ByRef control As Office.IRibbonControl)
 End Sub
 
 ''
+' Handler of b-queue-dashboard
+''
+Public Sub openDashboard(ByRef control As Office.IRibbonControl)
+  Dim meDashboard As WebResponse
+  Set meDashboard = CnpjaService.readMeDashboard
+  UtilService.openUrl meDashboard.Data("request")
+End Sub
+
+''
 ' Getter of cb-queue-concurrency-*
 ''
 Public Sub getQueueConcurrency(ByRef control As Office.IRibbonControl, ByRef pressed)
