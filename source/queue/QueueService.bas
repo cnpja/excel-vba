@@ -209,6 +209,7 @@ Public Function fulfillRequest(Response As WebResponse, requestIdValue As Long)
     Set requestMessage = queueRow.Range.Cells(1, queueTable.ListColumns("Mensagem").Index)
 
     If requestId.Value = requestIdValue Then
+      Application.GoTo requestId
       requestCost.Value = FindInKeyValues(Response.Headers, "cnpja-request-cost")
 
       Select Case Response.StatusCode
