@@ -64,7 +64,7 @@ End Sub
 Public Sub activate()
   validate
   On Error Resume Next
-  cnpjaRibbon.ActivateTab  "t-cnpja"
+  cnpjaRibbon.ActivateTab "t-cnpja"
   On Error GoTo 0
 End Sub
 

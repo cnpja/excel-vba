@@ -788,7 +788,7 @@ web_ErrorHandling:
 
     Dim web_ErrorDescription As String
     web_ErrorDescription = "An error occurred during parsing" & vbNewLine & _
-        Err.Number & VBA.IIf(Err.Number < 0, " (" & VBA.LCase$(VBA.Hex$(Err.Number)) & ")", "") & ": " & Err.Description
+        Err.Number & VBA.IIf(Err.Number < 0, " (" & VBA.LCase$(VBA.Hex$(Err.Number)) & ")", "") & ": " & Err.description
 
     LogError web_ErrorDescription, "WebHelpers.ParseByFormat", 11000
     Err.Raise 11000, "WebHelpers.ParseByFormat", web_ErrorDescription
@@ -846,7 +846,7 @@ web_ErrorHandling:
 
     Dim web_ErrorDescription As String
     web_ErrorDescription = "An error occurred during conversion" & vbNewLine & _
-        Err.Number & VBA.IIf(Err.Number < 0, " (" & VBA.LCase$(VBA.Hex$(Err.Number)) & ")", "") & ": " & Err.Description
+        Err.Number & VBA.IIf(Err.Number < 0, " (" & VBA.LCase$(VBA.Hex$(Err.Number)) & ")", "") & ": " & Err.description
 
     LogError web_ErrorDescription, "WebHelpers.ConvertToFormat", 11001
     Err.Raise 11001, "WebHelpers.ConvertToFormat", web_ErrorDescription
@@ -1369,7 +1369,7 @@ web_ErrorHandling:
 
     Dim web_ErrorDescription As String
     web_ErrorDescription = "An error occurred while getting url parts" & vbNewLine & _
-        Err.Number & VBA.IIf(Err.Number < 0, " (" & VBA.LCase$(VBA.Hex$(Err.Number)) & ")", "") & ": " & Err.Description
+        Err.Number & VBA.IIf(Err.Number < 0, " (" & VBA.LCase$(VBA.Hex$(Err.Number)) & ")", "") & ": " & Err.description
 
     LogError web_ErrorDescription, "WebHelpers.GetUrlParts", 11003
     Err.Raise 11003, "WebHelpers.GetUrlParts", web_ErrorDescription
@@ -2777,7 +2777,7 @@ Public Function ParseUtc(utc_UtcDate As Date) As Date
     Exit Function
 
 utc_ErrorHandling:
-    Err.Raise 10011, "UtcConverter.ParseUtc", "UTC parsing error: " & Err.Number & " - " & Err.Description
+    Err.Raise 10011, "UtcConverter.ParseUtc", "UTC parsing error: " & Err.Number & " - " & Err.description
 End Function
 
 ''
@@ -2806,7 +2806,7 @@ Public Function ConvertToUtc(utc_LocalDate As Date) As Date
     Exit Function
 
 utc_ErrorHandling:
-    Err.Raise 10012, "UtcConverter.ConvertToUtc", "UTC conversion error: " & Err.Number & " - " & Err.Description
+    Err.Raise 10012, "UtcConverter.ConvertToUtc", "UTC conversion error: " & Err.Number & " - " & Err.description
 End Function
 
 ''
@@ -2884,7 +2884,7 @@ Public Function ParseIso(utc_IsoString As String) As Date
     Exit Function
 
 utc_ErrorHandling:
-    Err.Raise 10013, "UtcConverter.ParseIso", "ISO 8601 parsing error for " & utc_IsoString & ": " & Err.Number & " - " & Err.Description
+    Err.Raise 10013, "UtcConverter.ParseIso", "ISO 8601 parsing error for " & utc_IsoString & ": " & Err.Number & " - " & Err.description
 End Function
 
 ''
@@ -2903,7 +2903,7 @@ Public Function ConvertToIso(utc_LocalDate As Date) As String
     Exit Function
 
 utc_ErrorHandling:
-    Err.Raise 10014, "UtcConverter.ConvertToIso", "ISO 8601 conversion error: " & Err.Number & " - " & Err.Description
+    Err.Raise 10014, "UtcConverter.ConvertToIso", "ISO 8601 conversion error: " & Err.Number & " - " & Err.description
 End Function
 
 ' ============================================= '
@@ -3172,7 +3172,7 @@ AutoProxy_Cleanup:
     ' Error handling
     If Err.Number <> 0 Then
         ' Unmanaged error
-        Err.Raise Err.Number, "AutoProxy:" & Err.source, Err.Description, Err.HelpFile, Err.HelpContext
+        Err.Raise Err.Number, "AutoProxy:" & Err.source, Err.description, Err.HelpFile, Err.HelpContext
     ElseIf AutoProxy_Error <> 0 Then
         Err.Raise AutoProxy_Error, "AutoProxy", AutoProxy_ErrorMsg
     End If

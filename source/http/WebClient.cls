@@ -348,7 +348,7 @@ web_ErrorHandling:
     Case 12002, 12007, 12029
         ' Treat timeout-related errors as 408: timeout, name not resolved, cannot connect
         web_Response.StatusCode = WebStatusCode.RequestTimeout
-        web_Response.StatusDescription = "Request Timeout: " & Err.Description
+        web_Response.StatusDescription = "Request Timeout: " & Err.description
 
         WebHelpers.LogResponse Me, Request, web_Response
         Set Execute = web_Response
@@ -356,7 +356,7 @@ web_ErrorHandling:
     Case Else
         ' Error
         web_ErrorDescription = "An error occurred during execute" & vbNewLine & _
-            Err.Number & VBA.IIf(Err.Number < 0, " (" & VBA.LCase$(VBA.Hex$(Err.Number)) & ")", "") & ": " & Err.Description
+            Err.Number & VBA.IIf(Err.Number < 0, " (" & VBA.LCase$(VBA.Hex$(Err.Number)) & ")", "") & ": " & Err.description
 
         WebHelpers.LogError web_ErrorDescription, "WebClient.Execute", 11011 + vbObjectError
         Err.Raise 11011 + vbObjectError, "WebClient.Execute", web_ErrorDescription
@@ -595,7 +595,7 @@ web_ErrorHandling:
     Set web_Http = Nothing
     Err.Raise 11012 + vbObjectError, "WebClient.PrepareHttpRequest", _
         "An error occurred while preparing http request" & vbNewLine & _
-        Err.Number & VBA.IIf(Err.Number < 0, " (" & VBA.LCase$(VBA.Hex$(Err.Number)) & ")", "") & ": " & Err.Description
+        Err.Number & VBA.IIf(Err.Number < 0, " (" & VBA.LCase$(VBA.Hex$(Err.Number)) & ")", "") & ": " & Err.description
 End Function
 
 ''
@@ -677,7 +677,7 @@ web_ErrorHandling:
 
     Err.Raise 11013 + vbObjectError, "WebClient.PrepareCURLRequest", _
         "An error occurred while preparing cURL request" & vbNewLine & _
-        Err.Number & VBA.IIf(Err.Number < 0, " (" & VBA.LCase$(VBA.Hex$(Err.Number)) & ")", "") & ": " & Err.Description
+        Err.Number & VBA.IIf(Err.Number < 0, " (" & VBA.LCase$(VBA.Hex$(Err.Number)) & ")", "") & ": " & Err.description
 End Function
 
 ''
@@ -748,7 +748,7 @@ Private Sub web_LoadAutoProxy(web_Request As WebRequest)
 web_ErrorHandling:
 
     WebHelpers.LogError "An error occurred while loading auto-proxy" & vbNewLine & _
-        Err.Number & VBA.IIf(Err.Number < 0, " (" & VBA.LCase$(VBA.Hex$(Err.Number)) & ")", "") & ": " & Err.Description, _
+        Err.Number & VBA.IIf(Err.Number < 0, " (" & VBA.LCase$(VBA.Hex$(Err.Number)) & ")", "") & ": " & Err.description, _
         "WebClient.LoadAutoProxy", Err.Number
 #End If
 End Sub

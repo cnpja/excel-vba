@@ -64,7 +64,7 @@ Public Sub createTicket(ByRef control As Office.IRibbonControl)
   message = InputBox("Como podemos ajudar?", "CNPJá! Atendimento")
   If message = Empty Then Exit Sub
 
-  CnpjaService.createMeTicket(message)
+  CnpjaService.createMeTicket message
 
   MsgBox "Agradecemos o contato!" & vbCrLf & vbCrLf & _
     "Responderemos sua mensagem via e-mail em breve.", vbInformation, "CNPJá! Atendimento"

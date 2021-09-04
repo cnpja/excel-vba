@@ -23,7 +23,7 @@ End Sub
 Public Sub getQueueStartVisible(ByRef control As Office.IRibbonControl, ByRef visible)
   Dim queueRunning As String
   queueRunning = ConfigService.getKey("QUEUE", "RUNNING")
-  If queueRunning = "True" then visible = False Else visible = True
+  If queueRunning = "True" Then visible = False Else visible = True
 End Sub
 
 ''
@@ -62,7 +62,7 @@ End Sub
 Public Sub getQueuePauseVisible(ByRef control As Office.IRibbonControl, ByRef visible)
   Dim queueRunning As String
   queueRunning = ConfigService.getKey("QUEUE", "RUNNING")
-  If queueRunning = "True" then visible = True Else visible = False
+  If queueRunning = "True" Then visible = True Else visible = False
 End Sub
 
 ''

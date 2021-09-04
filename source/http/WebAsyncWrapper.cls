@@ -155,7 +155,7 @@ web_ErrorHandling:
     Set Me.Request = Nothing
 
     ' Rethrow error
-    Err.Raise Err.Number, Err.source, Err.Description
+    Err.Raise Err.Number, Err.source, Err.description
 End Sub
 
 ''

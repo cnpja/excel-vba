@@ -38,7 +38,7 @@ Public Function createSheet(sheetName As String, tableName As String, title As S
 
   createSheet.Name = sheetName
   createSheet.Cells(1, 2).Value = "|   " & title
-  createSheet.Columns(1).Range.NumberFormat = "@"
+  createSheet.columns(1).NumberFormat = "@"
 
   For Each columTitle In columns
     columnCounter = columnCounter + 1

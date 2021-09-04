@@ -64,11 +64,11 @@ End Function
 Public Function createMeTicket(message As String) As WebResponse
   Dim Request As New WebRequest
   Dim Body As Dictionary
-  Dim name As String
+  Dim Name As String
 
-  name = ConfigService.getKey("ACCOUNT", "NAME")
+  Name = ConfigService.getKey("ACCOUNT", "NAME")
   Set Body = New Dictionary
-  Body.Add "subject", "[Excel] Atendimento " & name
+  Body.Add "subject", "[Excel] Atendimento " & Name
   Body.Add "body", message
 
   Set Request.Body = Body
