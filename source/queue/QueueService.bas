@@ -14,7 +14,7 @@ Option Explicit
 Public Function countPending() As Long
   countPending = 0
   Dim queueTable As ListObject
-  Set queueTable = SheetService.getTable("CNPJA_FILA")
+  Set queueTable = QueueSheet.getTable(True)
   If queueTable Is Nothing Then Exit Function
   countPending = Application.WorksheetFunction.CountIf(queueTable.ListColumns("Situação").Range, "Pendente")
 End Function
@@ -25,7 +25,7 @@ End Function
 Public Function countPaused() As Long
   countPaused = 0
   Dim queueTable As ListObject
-  Set queueTable = SheetService.getTable("CNPJA_FILA")
+  Set queueTable = QueueSheet.getTable(True)
   If queueTable Is Nothing Then Exit Function
   countPaused = Application.WorksheetFunction.CountIf(queueTable.ListColumns("Situação").Range, "Pausado")
 End Function
@@ -36,7 +36,7 @@ End Function
 Public Function countProcessing() As Long
   countProcessing = 0
   Dim queueTable As ListObject
-  Set queueTable = SheetService.getTable("CNPJA_FILA")
+  Set queueTable = QueueSheet.getTable(True)
   If queueTable Is Nothing Then Exit Function
   countProcessing = Application.WorksheetFunction.CountIf(queueTable.ListColumns("Situação").Range, "Processando")
 End Function
@@ -61,7 +61,7 @@ End Function
 Public Function countError() As Long
   countError = 0
   Dim queueTable As ListObject
-  Set queueTable = SheetService.getTable("CNPJA_FILA")
+  Set queueTable = QueueSheet.getTable(True)
   If queueTable Is Nothing Then Exit Function
   countError = Application.WorksheetFunction.CountIf(queueTable.ListColumns("Situação").Range, "Falha")
 End Function
@@ -146,11 +146,14 @@ Public Function startRequests()
   Dim requestMessage As Range
   Dim taxId As String
 
+  ConfigService.setKey "QUEUE", "STARTING", "True"
+  ConfigService.delKey "QUEUE", "FULFILLING"
+
   maxConcurrency = CInt(ConfigService.getKey("QUEUE", "CONCURRENCY"))
   If countProcessing() >= maxConcurrency Then Exit Function
 
   If countPending() = 0 Then
-    ConfigService.setKey "QUEUE", "RUNNING", "False"
+    ConfigService.delKey "QUEUE", "RUNNING"
     Exit Function
   End If
 
@@ -185,7 +188,8 @@ Public Function startRequests()
     End If
   Next queueRow
 
-  CnpjaService.readMeCredit
+  ConfigService.delKey "QUEUE", "STARTING"
+  'CnpjaService.readMeCredit
 End Function
 
 ''
@@ -199,6 +203,16 @@ Public Function fulfillRequest(Response As WebResponse, requestIdValue As Long)
   Dim requestStatus As Range
   Dim requestCost As Range
   Dim requestMessage As Range
+  Dim isFulfilling As String
+
+  On Error GoTo FulfillmentFailure
+
+  Do
+    DoEvents
+    isFulfilling = ConfigService.getKey("QUEUE", "FULFILLING")
+  Loop While isFulfilling = "True"
+
+  ConfigService.setKey "QUEUE", "FULFILLING", "True"
 
   disableUpdates
 
@@ -268,7 +282,18 @@ Public Function fulfillRequest(Response As WebResponse, requestIdValue As Long)
   Next queueRow
 
   enableUpdates
-  startRequests
+
+  ConfigService.delKey "QUEUE", "FULFILLING"
+
+  If ConfigService.getKey("QUEUE", "STARTING") <> "True" Then
+    startRequests
+  End If
+
+  Exit Function
+
+FulfillmentFailure:
+  ConfigService.delKey "QUEUE", "FULFILLING"
+  Debug.Print "Fulfillment failed for id: " & requestIdValue
 End Function
 
 ''
