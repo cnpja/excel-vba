@@ -42,6 +42,13 @@ Public Function countProcessing() As Long
 End Function
 
 ''
+' Count pending and paused items
+''
+Public Function countUnstarted() As Long
+  countUnstarted = countPending() + countPaused()
+End Function
+
+''
 ' Count processing, pending and paused items
 ''
 Public Function countOpen() As Long
@@ -270,7 +277,6 @@ End Function
 Private Function disableUpdates()
   Application.ScreenUpdating = False
   Application.EnableEvents = False
-  Application.Calculation = xlCalculationManual
 End Function
 
 ''
@@ -279,6 +285,4 @@ End Function
 Private Function enableUpdates()
   Application.ScreenUpdating = True
   Application.EnableEvents = True
-  Application.Calculation = xlCalculationAutomatic
-  DoEvents
 End Function

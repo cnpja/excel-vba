@@ -12,9 +12,9 @@ Option Explicit
 ' Getter of b-queue-start label
 ''
 Public Sub getQueueStartLabel(ByRef control As Office.IRibbonControl, ByRef label)
-  Dim queueOpen As Long
-  queueOpen = QueueService.countOpen
-  label = "Iniciar (" & queueOpen & ")"
+  Dim queueUnstarted As Long
+  queueUnstarted = QueueService.countUnstarted
+  label = "Iniciar (" & queueUnstarted & ")"
 End Sub
 
 ''
@@ -31,12 +31,12 @@ End Sub
 ''
 Public Sub startQueue(ByRef control As Office.IRibbonControl)
   Dim queueTable As ListObject
-  Dim queueOpen As Long
+  Dim queueUnstarted As Long
 
   Set queueTable = QueueSheet.getTable()
-  queueOpen = QueueService.countOpen()
+  queueUnstarted = QueueService.countUnstarted()
 
-  If queueOpen = 0 Then
+  If queueUnstarted = 0 Then
     MsgBox "A fila de consultas está vazia!" & vbCrLf & vbCrLf & _
       "Para adicionar novos itens utilize o botão 'Consultar CNPJs'.", _
       vbInformation, "CNPJá! Fila de Consultas"

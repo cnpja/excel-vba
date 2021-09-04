@@ -101,9 +101,9 @@ O limite por minuto é definido pelo seu plano, e ao ultrapassá-lo a consulta r
             <checkBox id="cb-queue-concurrency-02" label="2" getPressed="QueueController.getQueueConcurrency" onAction="QueueController.setQueueConcurrency"/>
             <checkBox id="cb-queue-concurrency-03" label="3" getPressed="QueueController.getQueueConcurrency" onAction="QueueController.setQueueConcurrency"/>
             <menuSeparator id="ms-queue-concurrency-premium" title="Plano PREMIUM"/>
-            <checkBox id="cb-queue-concurrency-04" label="4" getPressed="QueueController.getQueueConcurrency" onAction="QueueController.setQueueConcurrency"/>
-            <checkBox id="cb-queue-concurrency-05" label="5" getPressed="QueueController.getQueueConcurrency" onAction="QueueController.setQueueConcurrency"/>
             <checkBox id="cb-queue-concurrency-06" label="6" getPressed="QueueController.getQueueConcurrency" onAction="QueueController.setQueueConcurrency"/>
+            <checkBox id="cb-queue-concurrency-09" label="9" getPressed="QueueController.getQueueConcurrency" onAction="QueueController.setQueueConcurrency"/>
+            <checkBox id="cb-queue-concurrency-12" label="12" getPressed="QueueController.getQueueConcurrency" onAction="QueueController.setQueueConcurrency"/>
           </menu>
         </group>
 
