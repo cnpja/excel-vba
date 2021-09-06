@@ -295,9 +295,6 @@ Public Function fulfillRequest(Response As WebResponse, requestIdValue As Long)
 
   Select Case Response.StatusCode
     Case 200
-      requestStatus.Value = "Sucesso"
-      requestMessage.Value = ""
-
       Select Case requestType.Value
         Case "CNPJ"
           OfficeSheet.loadData Response
@@ -308,6 +305,8 @@ Public Function fulfillRequest(Response As WebResponse, requestIdValue As Long)
           SimplesSheet.loadData Response
           CccSheet.loadData Response
       End Select
+      requestStatus.Value = "Sucesso"
+      requestMessage.Value = ""
 
     Case 400
       requestStatus.Value = "Incorreto"
