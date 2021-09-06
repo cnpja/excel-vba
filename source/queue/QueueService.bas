@@ -8,10 +8,19 @@ Attribute VB_Name = "QueueService"
 ''
 Option Explicit
 
+#If Win64 Then
+  Private Declare PtrSafe Function SetForegroundWindow Lib "user32" (ByVal hWnd As LongPtr) As LongPtr
+  Private appHwnd As LongPtr
+#Else
+  Private Declare Function SetForegroundWindow Lib "user32" (ByVal hWnd As Long) As Long
+  Private appHwnd As Long
+#End If
+
 ''
 ' Count pending items
 ''
 Public Function countPending() As Long
+  SetForegroundWindow(appHwnd)
   countPending = 0
   Dim queueTable As ListObject
   Set queueTable = QueueSheet.getTable(True)
@@ -23,6 +32,7 @@ End Function
 ' Count paused items
 ''
 Public Function countPaused() As Long
+  SetForegroundWindow(appHwnd)
   countPaused = 0
   Dim queueTable As ListObject
   Set queueTable = QueueSheet.getTable(True)
@@ -34,6 +44,7 @@ End Function
 ' Count processing items
 ''
 Public Function countProcessing() As Long
+  SetForegroundWindow(appHwnd)
   countProcessing = 0
   Dim queueTable As ListObject
   Set queueTable = QueueSheet.getTable(True)
@@ -45,6 +56,7 @@ End Function
 ' Count error items
 ''
 Public Function countError() As Long
+  SetForegroundWindow(appHwnd)
   countError = 0
   Dim queueTable As ListObject
   Set queueTable = QueueSheet.getTable(True)
@@ -95,6 +107,7 @@ End Function
 ' - Create tables if not present
 ''
 Public Function setupEnvironment()
+  appHwnd = Application.hwnd
   ConfigService.delKey "QUEUE", "FULFILLING"
 
   Application.AutoCorrect.AutoFillFormulasInLists = False
@@ -138,6 +151,7 @@ End Function
 ' Pauses all pending requests
 ''
 Public Function pauseRequests()
+  SetForegroundWindow(appHwnd)
   Dim queueTable As ListObject
   Set queueTable = QueueSheet.getTable()
 
@@ -176,6 +190,7 @@ End Function
 ' Schedules a procedure that periodically checks for failed requests
 ''
 Public Function processRequestsWithHealthCheck()
+  SetForegroundWindow(appHwnd)
   Application.Calculate
 
   If (countPending() + countProcessing()) = 0 Then
@@ -190,6 +205,7 @@ End Function
 ' Trigger fetching procedure for pending items
 ''
 Public Function processRequests()
+  SetForegroundWindow(appHwnd)
   Dim concurrency As String
   Dim maxConcurrency As Integer
   Dim queueTable As ListObject
@@ -242,6 +258,7 @@ End Function
 ' Fulfills an async request by filling the matching queue item with response data
 ''
 Public Function fulfillRequest(Response As WebResponse, requestIdValue As Long)
+  SetForegroundWindow(appHwnd)
   Dim queueTable As ListObject
   Dim queueRowId As Long
   Dim queueRow As ListRow
@@ -345,6 +362,7 @@ End Function
 ' Disables Excel update operations
 ''
 Private Function disableUpdates()
+  SetForegroundWindow(appHwnd)
   Application.ScreenUpdating = False
   Application.EnableEvents = False
 End Function
@@ -353,6 +371,7 @@ End Function
 ' Re-enables Excel update operations
 ''
 Private Function enableUpdates()
+  SetForegroundWindow(appHwnd)
   Application.ScreenUpdating = True
   Application.EnableEvents = True
 End Function
