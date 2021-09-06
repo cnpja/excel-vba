@@ -21,9 +21,11 @@ End Sub
 ' Getter of b-queue-start visible
 ''
 Public Sub getQueueStartVisible(ByRef control As Office.IRibbonControl, ByRef visible)
-  Dim queueProcessing As Long
-  queueProcessing = QueueService.countProcessing
-  If queueProcessing = 0 Then visible = True Else visible = False
+  If ConfigService.getKey("QUEUE", "RUNNING") <> "True" Then
+    visible = True
+  Else
+    visible = False
+  End If
 End Sub
 
 ''
@@ -43,10 +45,6 @@ Public Sub startQueue(ByRef control As Office.IRibbonControl)
     Exit Sub
   End If
 
-  CnpjaService.readMeCredit
-  queueTable.ListColumns("Situação").Range.Replace "Pausado", "Pendente"
-
-  QueueService.setupEnvironment
   QueueService.startRequests
 End Sub
 
@@ -63,9 +61,11 @@ End Sub
 ' Getter of b-queue-pause visible
 ''
 Public Sub getQueuePauseVisible(ByRef control As Office.IRibbonControl, ByRef visible)
-  Dim queueProcessing As Long
-  queueProcessing = QueueService.countProcessing
-  If queueProcessing > 0 Then visible = True Else visible = False
+  If ConfigService.getKey("QUEUE", "RUNNING") = "True" Then
+    visible = True
+  Else
+    visible = False
+  End If
 End Sub
 
 ''

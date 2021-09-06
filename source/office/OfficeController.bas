@@ -14,7 +14,6 @@ Option Explicit
 Public Sub queryOffice(ByRef control As Office.IRibbonControl)
   Dim inputData As Range
   Set inputData = QueueService.askInputData("CNPJ")
-  
   QueueService.setupEnvironment
   QueueSheet.loadData "CNPJ", inputData
   QueueService.startRequests

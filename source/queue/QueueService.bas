@@ -53,36 +53,6 @@ Public Function countError() As Long
 End Function
 
 ''
-' Ensures everyting required to call the API is in order:
-' - Disable formula auto fill
-' - Disable number as text and inconsistent formula warnings
-' - Ask user his API key if not configured yet
-' - Create tables if not present
-''
-Public Function setupEnvironment()
-  ConfigService.delKey "QUEUE", "FULFILLING"
-
-  Application.AutoCorrect.AutoFillFormulasInLists = False
-  Application.ErrorCheckingOptions.InconsistentTableFormula = False
-  Application.ErrorCheckingOptions.NumberAsText = False
-  Application.ScreenUpdating = False
-
-  QueueSheet.getTable
-  OfficeSheet.getTable
-  MemberSheet.getTable
-  PhoneSheet.getTable
-  EmailSheet.getTable
-  ActivitySheet.getTable
-  SimplesSheet.getTable
-  CccSheet.getTable
-
-  Application.ScreenUpdating = True
-
-  RibbonController.activate
-  CnpjaService.readMe
-End Function
-
-''
 ' Asks the user to select a range containg data list (1 column, multiple rows)
 ''
 Public Function askInputData(displayName As String) As Range
@@ -118,11 +88,60 @@ Public Function askInputData(displayName As String) As Range
 End Function
 
 ''
+' Ensures everyting required to call the API is in order:
+' - Disable formula auto fill
+' - Disable number as text and inconsistent formula warnings
+' - Ask user his API key if not configured yet
+' - Create tables if not present
+''
+Public Function setupEnvironment()
+  ConfigService.delKey "QUEUE", "FULFILLING"
+
+  Application.AutoCorrect.AutoFillFormulasInLists = False
+  Application.ErrorCheckingOptions.InconsistentTableFormula = False
+  Application.ErrorCheckingOptions.NumberAsText = False
+  Application.ScreenUpdating = False
+
+  QueueSheet.getTable
+  OfficeSheet.getTable
+  MemberSheet.getTable
+  PhoneSheet.getTable
+  EmailSheet.getTable
+  ActivitySheet.getTable
+  SimplesSheet.getTable
+  CccSheet.getTable
+
+  Application.ScreenUpdating = True
+
+  RibbonController.activate
+  CnpjaService.readMe
+End Function
+
+''
+' Begin the procered of consuming request queue
+''
+Public Function startRequests()
+  Dim queueTable As ListObject
+  
+  setupEnvironment
+  Set queueTable = QueueSheet.getTable()
+  queueTable.ListColumns("Situação").Range.Replace "Pausado", "Pendente"
+
+  ConfigService.setKey "QUEUE", "RUNNING", "True"
+  ConfigService.delKey "QUEUE", "FULFILLING"
+
+  CnpjaService.readMeCredit
+  processRequestsWithHealthCheck
+End Function
+
+''
 ' Pauses all pending requests
 ''
 Public Function pauseRequests()
   Dim queueTable As ListObject
   Set queueTable = QueueSheet.getTable()
+
+  ConfigService.delKey "QUEUE", "RUNNING"
 
   Application.DisplayAlerts = False
   queueTable.ListColumns("Situação").Range.Replace "Pendente", "Pausado"
@@ -142,14 +161,36 @@ Public Function retryRequests()
   Dim queueTable As ListObject
   Set queueTable = QueueSheet.getTable()
   queueTable.ListColumns("Situação").Range.Replace "Falha", "Pendente"
-  RibbonController.refresh
   startRequests
+End Function
+
+''
+' Runs finalizing operations after all requests been processed
+''
+Public Function completeRequests()
+  ConfigService.delKey "QUEUE", "RUNNING"
+  CnpjaService.readMeCredit
+End Function
+
+''
+' Schedules a procedure that periodically checks for failed requests
+''
+Public Function processRequestsWithHealthCheck()
+  Application.Calculate
+
+  If (countPending() + countProcessing()) = 0 Then
+    completeRequests
+  ElseIf ConfigService.getKey("QUEUE", "RUNNING") = "True" Then
+    processRequests
+    Application.onTime Now + TimeValue("00:00:15"), "QueueService.processRequestsWithHealthCheck"
+  End If
 End Function
 
 ''
 ' Trigger fetching procedure for pending items
 ''
-Public Function startRequests()
+Public Function processRequests()
+  Dim concurrency As String
   Dim maxConcurrency As Integer
   Dim queueTable As ListObject
   Dim queueRowId As Long
@@ -162,15 +203,8 @@ Public Function startRequests()
   Dim requestMessage As Range
   Dim taxId As String
 
-  ConfigService.setKey "QUEUE", "STARTING", "True"
-
-  maxConcurrency = CInt(ConfigService.getKey("QUEUE", "CONCURRENCY"))
-  If countProcessing() >= maxConcurrency Then Exit Function
-
-  If countPending() = 0 Then
-    CnpjaService.readMeCredit
-    Exit Function
-  End If
+  concurrency = ConfigService.getKey("QUEUE", "CONCURRENCY")
+  If concurrency = "" Then maxConcurrency = 1 Else maxConcurrency = CInt(concurrency)
 
   Set queueTable = QueueSheet.getTable()
 
@@ -188,8 +222,8 @@ Public Function startRequests()
     Set requestMessage = queueRow.Range.Cells(1, queueTable.ListColumns("Mensagem").Index)
 
     requestDate.Value = Now
-    requestStatus.Formula = "=IF((NOW()-[@[Horário de Processamento]])*1440>1,""Falha"",""Processando"")"
-    requestMessage.Formula = "=IF((NOW()-[@[Horário de Processamento]])*1440>1,""Tempo de processamento excedido"",""Em andamento, aguarde..."")"
+    requestStatus.Formula = "=IF((NOW()-[@[Horário de Processamento]])*1440>0.75,""Falha"",""Processando"")"
+    requestMessage.Formula = "=IF((NOW()-[@[Horário de Processamento]])*1440>0.75,""Tempo de processamento excedido"",""Em andamento, aguarde..."")"
     UtilService.resetStyle requestMessage
 
     Select Case requestType.Value
@@ -202,8 +236,6 @@ Public Function startRequests()
         requestMessage.Value = "Consulta não suportada"
     End Select
   Loop
-
-  ConfigService.delKey "QUEUE", "STARTING"
 End Function
 
 ''
@@ -296,8 +328,10 @@ Public Function fulfillRequest(Response As WebResponse, requestIdValue As Long)
   enableUpdates
   ConfigService.delKey "QUEUE", "FULFILLING"
 
-  If ConfigService.getKey("QUEUE", "STARTING") <> "True" Then
-    startRequests
+  If (countPending() + countProcessing()) = 0 Then
+    completeRequests
+  Else
+    processRequests
   End If
 
   Exit Function
