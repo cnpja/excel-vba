@@ -8,6 +8,8 @@ Attribute VB_Name = "EmailSheet"
 ''
 Option Explicit
 
+Private tableReference As ListObject
+
 ''
 ' Acquires reference to target table creating if necessary
 ''
@@ -15,7 +17,11 @@ Public Function getTable() As ListObject
   Dim columns() As Variant
   Dim newSheet As Worksheet
 
-  Set getTable = SheetService.getTable("CNPJA_EMAILS")
+  If tableReference is Nothing Then
+    Set tableReference = SheetService.getTable("CNPJA_EMAILS")
+  End If
+
+  Set getTable = tableReference
   If Not getTable Is Nothing Then Exit Function
 
   columns = Array( _
@@ -33,37 +39,36 @@ Public Function getTable() As ListObject
     columns _
   )
 
-  Set getTable = newSheet.ListObjects(1)
+  Set tableReference = newSheet.ListObjects(1)
 
-  With getTable.ListColumns("Endereço").Range
+  With tableReference.ListColumns("Endereço").Range
     .ColumnWidth = 35
   End With
 
-  With getTable.ListColumns("Domínio").Range
+  With tableReference.ListColumns("Domínio").Range
     .ColumnWidth = 20
   End With
 
-  getTable.ListColumns("Última Atualização").Range.ColumnWidth = 19
+  tableReference.ListColumns("Última Atualização").Range.ColumnWidth = 19
+  Set getTable = tableReference
 End Function
 
 ''
 ' Load API response data into the table
 ''
 Public Function loadData(Response As WebResponse)
-  Dim table As ListObject
   Dim row As Range
   Dim email As Dictionary
-  
-  Set table = getTable()
-  SheetService.deleteRowsById table, "Estabelecimento", Response.Data("taxId")
+
+  SheetService.deleteRowsById tableReference, "Estabelecimento", Response.Data("taxId")
  
   For Each email In Response.Data("emails")
-    Set row = table.ListRows.Add.Range
+    Set row = tableReference.ListRows.Add.Range
 
-    row(table.ListColumns("Estabelecimento").Index) = Response.Data("taxId")
-    row(table.ListColumns("Razão Social").Index) = Response.Data("company")("name")
-    row(table.ListColumns("Endereço").Index) = email("address")
-    row(table.ListColumns("Domínio").Index) = email("domain")
-    row(table.ListColumns("Última Atualização").Index) = WebHelpers.ParseIso(Response.Data("updated"))
+    row(tableReference.ListColumns("Estabelecimento").Index) = Response.Data("taxId")
+    row(tableReference.ListColumns("Razão Social").Index) = Response.Data("company")("name")
+    row(tableReference.ListColumns("Endereço").Index) = email("address")
+    row(tableReference.ListColumns("Domínio").Index) = email("domain")
+    row(tableReference.ListColumns("Última Atualização").Index) = WebHelpers.ParseIso(Response.Data("updated"))
   Next email
 End Function

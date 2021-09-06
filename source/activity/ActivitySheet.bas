@@ -8,6 +8,8 @@ Attribute VB_Name = "ActivitySheet"
 ''
 Option Explicit
 
+Private tableReference As ListObject
+
 ''
 ' Acquires reference to target table creating if necessary
 ''
@@ -15,7 +17,11 @@ Public Function getTable() As ListObject
   Dim columns() As Variant
   Dim newSheet As Worksheet
 
-  Set getTable = SheetService.getTable("CNPJA_ATIVIDADES")
+  If tableReference is Nothing Then
+    Set tableReference = SheetService.getTable("CNPJA_ATIVIDADES")
+  End If
+
+  Set getTable = tableReference
   If Not getTable Is Nothing Then Exit Function
 
   columns = Array( _
@@ -34,51 +40,50 @@ Public Function getTable() As ListObject
     columns _
   )
 
-  Set getTable = newSheet.ListObjects(1)
+  Set tableReference = newSheet.ListObjects(1)
 
-  With getTable.ListColumns("Principal").Range
+  With tableReference.ListColumns("Principal").Range
     .ColumnWidth = 10
     .HorizontalAlignment = xlHAlignCenter
   End With
 
-  With getTable.ListColumns("Atividade Econômica ID").Range
+  With tableReference.ListColumns("Atividade Econômica ID").Range
     .HorizontalAlignment = xlHAlignCenter
   End With
 
-  With getTable.ListColumns("Atividade Econômica").Range
+  With tableReference.ListColumns("Atividade Econômica").Range
     .ColumnWidth = 35
   End With
 
-  getTable.ListColumns("Última Atualização").Range.ColumnWidth = 19
+  tableReference.ListColumns("Última Atualização").Range.ColumnWidth = 19
+  Set getTable = tableReference
 End Function
 
 ''
 ' Load API response data into the table
 ''
 Public Function loadData(Response As WebResponse)
-  Dim table As ListObject
   Dim row As Range
   Dim activity As Dictionary
-  
-  Set table = getTable()
-  SheetService.deleteRowsById table, "Estabelecimento", Response.Data("taxId")
+
+  SheetService.deleteRowsById tableReference, "Estabelecimento", Response.Data("taxId")
  
-  Set row = table.ListRows.Add.Range
-  row(table.ListColumns("Estabelecimento").Index) = Response.Data("taxId")
-  row(table.ListColumns("Razão Social").Index) = Response.Data("company")("name")
-  row(table.ListColumns("Principal").Index) = "Sim"
-  row(table.ListColumns("Atividade Econômica ID").Index) = Response.Data("mainActivity")("id")
-  row(table.ListColumns("Atividade Econômica").Index) = Response.Data("mainActivity")("text")
-  row(table.ListColumns("Última Atualização").Index) = WebHelpers.ParseIso(Response.Data("updated"))
+  Set row = tableReference.ListRows.Add.Range
+  row(tableReference.ListColumns("Estabelecimento").Index) = Response.Data("taxId")
+  row(tableReference.ListColumns("Razão Social").Index) = Response.Data("company")("name")
+  row(tableReference.ListColumns("Principal").Index) = "Sim"
+  row(tableReference.ListColumns("Atividade Econômica ID").Index) = Response.Data("mainActivity")("id")
+  row(tableReference.ListColumns("Atividade Econômica").Index) = Response.Data("mainActivity")("text")
+  row(tableReference.ListColumns("Última Atualização").Index) = WebHelpers.ParseIso(Response.Data("updated"))
 
   For Each activity In Response.Data("sideActivities")
-    Set row = table.ListRows.Add.Range
+    Set row = tableReference.ListRows.Add.Range
 
-    row(table.ListColumns("Estabelecimento").Index) = Response.Data("taxId")
-    row(table.ListColumns("Razão Social").Index) = Response.Data("company")("name")
-    row(table.ListColumns("Principal").Index) = "Não"
-    row(table.ListColumns("Atividade Econômica ID").Index) = activity("id")
-    row(table.ListColumns("Atividade Econômica").Index) = activity("text")
-    row(table.ListColumns("Última Atualização").Index) = WebHelpers.ParseIso(Response.Data("updated"))
+    row(tableReference.ListColumns("Estabelecimento").Index) = Response.Data("taxId")
+    row(tableReference.ListColumns("Razão Social").Index) = Response.Data("company")("name")
+    row(tableReference.ListColumns("Principal").Index) = "Não"
+    row(tableReference.ListColumns("Atividade Econômica ID").Index) = activity("id")
+    row(tableReference.ListColumns("Atividade Econômica").Index) = activity("text")
+    row(tableReference.ListColumns("Última Atualização").Index) = WebHelpers.ParseIso(Response.Data("updated"))
   Next activity
 End Function

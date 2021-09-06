@@ -8,6 +8,8 @@ Attribute VB_Name = "OfficeSheet"
 ''
 Option Explicit
 
+Private tableReference As ListObject
+
 ''
 ' Acquires reference to target table creating if necessary
 ''
@@ -15,7 +17,11 @@ Public Function getTable() As ListObject
   Dim columns() As Variant
   Dim newSheet As Worksheet
 
-  Set getTable = SheetService.getTable("CNPJA_ESTABELECIMENTOS")
+  If tableReference is Nothing Then
+    Set tableReference = SheetService.getTable("CNPJA_ESTABELECIMENTOS")
+  End If
+
+  Set getTable = tableReference
   If Not getTable Is Nothing Then Exit Function
 
   columns = Array( _
@@ -46,215 +52,214 @@ Public Function getTable() As ListObject
     columns _
   )
 
-  Set getTable = newSheet.ListObjects(1)
+  Set tableReference = newSheet.ListObjects(1)
 
-  With getTable.ListColumns("Porte ID").Range
+  With tableReference.ListColumns("Porte ID").Range
     .ColumnWidth = 10
     .HorizontalAlignment = xlHAlignCenter
   End With
 
-  With getTable.ListColumns("Porte").Range
+  With tableReference.ListColumns("Porte").Range
     .ColumnWidth = 15
   End With
 
-  With getTable.ListColumns("Capital Social").Range
+  With tableReference.ListColumns("Capital Social").Range
     .HorizontalAlignment = xlHAlignCenter
     .Style = "Currency"
     .ColumnWidth = 21
   End With
 
-  With getTable.ListColumns("Natureza Jurídica ID").Range
+  With tableReference.ListColumns("Natureza Jurídica ID").Range
     .ColumnWidth = 10
     .HorizontalAlignment = xlHAlignCenter
   End With
 
-  With getTable.ListColumns("Natureza Jurídica").Range
+  With tableReference.ListColumns("Natureza Jurídica").Range
     .ColumnWidth = 30
   End With
 
-  With getTable.ListColumns("Ente Federativo Responsável").Range
+  With tableReference.ListColumns("Ente Federativo Responsável").Range
     .ColumnWidth = 12
   End With
 
-  With getTable.ListColumns("Sócios").Range
+  With tableReference.ListColumns("Sócios").Range
     .ColumnWidth = 10
     .HorizontalAlignment = xlHAlignCenter
   End With
 
-  With getTable.ListColumns("Nome Fantasia").Range
+  With tableReference.ListColumns("Nome Fantasia").Range
   
   End With
 
-  With getTable.ListColumns("Data de Abertura").Range
+  With tableReference.ListColumns("Data de Abertura").Range
     .HorizontalAlignment = xlHAlignCenter
   End With
 
-  With getTable.ListColumns("Matriz").Range
+  With tableReference.ListColumns("Matriz").Range
     .ColumnWidth = 10
     .HorizontalAlignment = xlHAlignCenter
   End With
 
-  With getTable.ListColumns("Situação ID").Range
+  With tableReference.ListColumns("Situação ID").Range
     .ColumnWidth = 10
     .HorizontalAlignment = xlHAlignCenter
   End With
 
-  With getTable.ListColumns("Situação").Range
+  With tableReference.ListColumns("Situação").Range
     .ColumnWidth = 10
   End With
 
-  With getTable.ListColumns("Situação Data").Range
+  With tableReference.ListColumns("Situação Data").Range
     .HorizontalAlignment = xlHAlignCenter
   End With
 
-  With getTable.ListColumns("Telefones").Range
-    .ColumnWidth = 10
-    .HorizontalAlignment = xlHAlignCenter
-  End With
-
-  With getTable.ListColumns("E-mails").Range
+  With tableReference.ListColumns("Telefones").Range
     .ColumnWidth = 10
     .HorizontalAlignment = xlHAlignCenter
   End With
 
-  With getTable.ListColumns("Município IBGE").Range
+  With tableReference.ListColumns("E-mails").Range
     .ColumnWidth = 10
     .HorizontalAlignment = xlHAlignCenter
   End With
 
-  With getTable.ListColumns("Logradouro").Range
+  With tableReference.ListColumns("Município IBGE").Range
+    .ColumnWidth = 10
+    .HorizontalAlignment = xlHAlignCenter
+  End With
+
+  With tableReference.ListColumns("Logradouro").Range
     .ColumnWidth = 35
   End With
 
-  With getTable.ListColumns("Número").Range
+  With tableReference.ListColumns("Número").Range
     .ColumnWidth = 10
     .HorizontalAlignment = xlHAlignCenter
   End With
 
-  With getTable.ListColumns("Complemento").Range
+  With tableReference.ListColumns("Complemento").Range
   
   End With
 
-  With getTable.ListColumns("Bairro").Range
+  With tableReference.ListColumns("Bairro").Range
   
   End With
 
-  With getTable.ListColumns("Cidade").Range
+  With tableReference.ListColumns("Cidade").Range
   
   End With
 
-  With getTable.ListColumns("Estado").Range
+  With tableReference.ListColumns("Estado").Range
     .ColumnWidth = 10
     .HorizontalAlignment = xlHAlignCenter
   End With
 
-  With getTable.ListColumns("CEP").Range
+  With tableReference.ListColumns("CEP").Range
     .ColumnWidth = 10
     .HorizontalAlignment = xlHAlignCenter
   End With
 
-  With getTable.ListColumns("País").Range
+  With tableReference.ListColumns("País").Range
   
   End With
 
-  With getTable.ListColumns("Atividade Principal ID").Range
+  With tableReference.ListColumns("Atividade Principal ID").Range
     .ColumnWidth = 10
     .HorizontalAlignment = xlHAlignCenter
   End With
 
-  With getTable.ListColumns("Atividade Principal").Range
+  With tableReference.ListColumns("Atividade Principal").Range
     .ColumnWidth = 35
   End With
 
-  With getTable.ListColumns("Atividades Secundárias").Range
+  With tableReference.ListColumns("Atividades Secundárias").Range
     .ColumnWidth = 11
     .HorizontalAlignment = xlHAlignCenter
   End With
 
-  With getTable.ListColumns("Inscrições Estaduais").Range
+  With tableReference.ListColumns("Inscrições Estaduais").Range
     .ColumnWidth = 10
     .HorizontalAlignment = xlHAlignCenter
   End With
 
-  With getTable.ListColumns("Situação Motivo ID").Range
+  With tableReference.ListColumns("Situação Motivo ID").Range
     .ColumnWidth = 10
     .HorizontalAlignment = xlHAlignCenter
   End With
 
-  With getTable.ListColumns("Situação Motivo").Range
+  With tableReference.ListColumns("Situação Motivo").Range
     .ColumnWidth = 20
   End With
 
-  With getTable.ListColumns("Situação Especial ID").Range
+  With tableReference.ListColumns("Situação Especial ID").Range
     .ColumnWidth = 10
     .HorizontalAlignment = xlHAlignCenter
   End With
 
-  With getTable.ListColumns("Situação Especial").Range
+  With tableReference.ListColumns("Situação Especial").Range
     .ColumnWidth = 20
   End With
 
-  With getTable.ListColumns("Situação Especial Data").Range
+  With tableReference.ListColumns("Situação Especial Data").Range
     .HorizontalAlignment = xlHAlignCenter
   End With
 
-  getTable.ListColumns("Última Atualização").Range.ColumnWidth = 19
+  tableReference.ListColumns("Última Atualização").Range.ColumnWidth = 19
+  Set getTable = tableReference
 End Function
 
 ''
 ' Load API response data into the table
 ''
 Public Function loadData(Response As WebResponse)
-  Dim table As ListObject
   Dim row As Range
 
-  Set table = getTable()
-  Set row = SheetService.getRow(table, "Estabelecimento", Response.Data("taxId"))
+  Set row = SheetService.getRow(tableReference, "Estabelecimento", Response.Data("taxId"))
 
-  row(table.ListColumns("Estabelecimento").Index) = Response.Data("taxId")
-  row(table.ListColumns("Razão Social").Index) = Response.Data("company")("name")
-  row(table.ListColumns("Porte ID").Index) = Response.Data("company")("size")("id")
-  row(table.ListColumns("Porte").Index) = Response.Data("company")("size")("text")
-  row(table.ListColumns("Capital Social").Index) = Response.Data("company")("equity")
-  row(table.ListColumns("Natureza Jurídica ID").Index) = Response.Data("company")("nature")("id")
-  row(table.ListColumns("Natureza Jurídica").Index) = Response.Data("company")("nature")("text")
-  row(table.ListColumns("Ente Federativo Responsável").Index) = Response.Data("company")("jurisdiction")
-  row(table.ListColumns("Nome Fantasia").Index) = Response.Data("alias")
-  row(table.ListColumns("Data de Abertura").Index) = Response.Data("founded")
-  row(table.ListColumns("Matriz").Index) = UtilService.booleanToString(Response.Data("head"))
-  row(table.ListColumns("Situação ID").Index) = Response.Data("status")("id")
-  row(table.ListColumns("Situação").Index) = Response.Data("status")("text")
-  row(table.ListColumns("Situação Data").Index) = Response.Data("statusDate")
-  row(table.ListColumns("Município IBGE").Index) = Response.Data("address")("municipality")
-  row(table.ListColumns("Logradouro").Index) = Response.Data("address")("street")
-  row(table.ListColumns("Número").Index) = Response.Data("address")("number")
-  row(table.ListColumns("Complemento").Index) = Response.Data("address")("details")
-  row(table.ListColumns("Bairro").Index) = Response.Data("address")("district")
-  row(table.ListColumns("Cidade").Index) = Response.Data("address")("city")
-  row(table.ListColumns("Estado").Index) = Response.Data("address")("state")
-  row(table.ListColumns("CEP").Index) = Response.Data("address")("zip")
-  row(table.ListColumns("País").Index) = Response.Data("address")("country")("name")
-  row(table.ListColumns("Atividade Principal ID").Index) = Response.Data("mainActivity")("id")
-  row(table.ListColumns("Atividade Principal").Index) = Response.Data("mainActivity")("text")
-  row(table.ListColumns("Última Atualização").Index) = WebHelpers.ParseIso(Response.Data("updated"))
+  row(tableReference.ListColumns("Estabelecimento").Index) = Response.Data("taxId")
+  row(tableReference.ListColumns("Razão Social").Index) = Response.Data("company")("name")
+  row(tableReference.ListColumns("Porte ID").Index) = Response.Data("company")("size")("id")
+  row(tableReference.ListColumns("Porte").Index) = Response.Data("company")("size")("text")
+  row(tableReference.ListColumns("Capital Social").Index) = Response.Data("company")("equity")
+  row(tableReference.ListColumns("Natureza Jurídica ID").Index) = Response.Data("company")("nature")("id")
+  row(tableReference.ListColumns("Natureza Jurídica").Index) = Response.Data("company")("nature")("text")
+  row(tableReference.ListColumns("Ente Federativo Responsável").Index) = Response.Data("company")("jurisdiction")
+  row(tableReference.ListColumns("Nome Fantasia").Index) = Response.Data("alias")
+  row(tableReference.ListColumns("Data de Abertura").Index) = Response.Data("founded")
+  row(tableReference.ListColumns("Matriz").Index) = UtilService.booleanToString(Response.Data("head"))
+  row(tableReference.ListColumns("Situação ID").Index) = Response.Data("status")("id")
+  row(tableReference.ListColumns("Situação").Index) = Response.Data("status")("text")
+  row(tableReference.ListColumns("Situação Data").Index) = Response.Data("statusDate")
+  row(tableReference.ListColumns("Município IBGE").Index) = Response.Data("address")("municipality")
+  row(tableReference.ListColumns("Logradouro").Index) = Response.Data("address")("street")
+  row(tableReference.ListColumns("Número").Index) = Response.Data("address")("number")
+  row(tableReference.ListColumns("Complemento").Index) = Response.Data("address")("details")
+  row(tableReference.ListColumns("Bairro").Index) = Response.Data("address")("district")
+  row(tableReference.ListColumns("Cidade").Index) = Response.Data("address")("city")
+  row(tableReference.ListColumns("Estado").Index) = Response.Data("address")("state")
+  row(tableReference.ListColumns("CEP").Index) = Response.Data("address")("zip")
+  row(tableReference.ListColumns("País").Index) = Response.Data("address")("country")("name")
+  row(tableReference.ListColumns("Atividade Principal ID").Index) = Response.Data("mainActivity")("id")
+  row(tableReference.ListColumns("Atividade Principal").Index) = Response.Data("mainActivity")("text")
+  row(tableReference.ListColumns("Última Atualização").Index) = WebHelpers.ParseIso(Response.Data("updated"))
 
   If Response.Data.Exists("reason") Then
-    row(table.ListColumns("Situação Motivo").Index) = Response.Data("reason")("text")
-    row(table.ListColumns("Situação Motivo ID").Index) = Response.Data("reason")("id")
+    row(tableReference.ListColumns("Situação Motivo").Index) = Response.Data("reason")("text")
+    row(tableReference.ListColumns("Situação Motivo ID").Index) = Response.Data("reason")("id")
   End If
 
   If Response.Data.Exists("special") Then
-    row(table.ListColumns("Situação Especial").Index) = Response.Data("special")("text")
-    row(table.ListColumns("Situação Especial ID").Index) = Response.Data("special")("id")
-    row(table.ListColumns("Situação Especial Data").Index) = Response.Data("specialDate")
+    row(tableReference.ListColumns("Situação Especial").Index) = Response.Data("special")("text")
+    row(tableReference.ListColumns("Situação Especial ID").Index) = Response.Data("special")("id")
+    row(tableReference.ListColumns("Situação Especial Data").Index) = Response.Data("specialDate")
   End If
 
-  row(table.ListColumns("Sócios").Index) = Response.Data("company")("members").Count
-  row(table.ListColumns("Telefones").Index) = Response.Data("phones").Count
-  row(table.ListColumns("E-mails").Index) = Response.Data("emails").Count
-  row(table.ListColumns("Atividades Secundárias").Index) = Response.Data("sideActivities").Count
+  row(tableReference.ListColumns("Sócios").Index) = Response.Data("company")("members").Count
+  row(tableReference.ListColumns("Telefones").Index) = Response.Data("phones").Count
+  row(tableReference.ListColumns("E-mails").Index) = Response.Data("emails").Count
+  row(tableReference.ListColumns("Atividades Secundárias").Index) = Response.Data("sideActivities").Count
 
   If Response.Data.Exists("registrations") Then
-    row(table.ListColumns("Inscrições Estaduais").Index) = Response.Data("registrations").Count
+    row(tableReference.ListColumns("Inscrições Estaduais").Index) = Response.Data("registrations").Count
   End If
 End Function

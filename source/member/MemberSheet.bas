@@ -8,6 +8,8 @@ Attribute VB_Name = "MemberSheet"
 ''
 Option Explicit
 
+Private tableReference As ListObject
+
 ''
 ' Acquires reference to target table creating if necessary
 ''
@@ -15,7 +17,11 @@ Public Function getTable() As ListObject
   Dim columns() As Variant
   Dim newSheet As Worksheet
 
-  Set getTable = SheetService.getTable("CNPJA_SOCIOS")
+  If tableReference is Nothing Then
+    Set tableReference = SheetService.getTable("CNPJA_SOCIOS")
+  End If
+
+  Set getTable = tableReference
   If Not getTable Is Nothing Then Exit Function
 
   columns = Array( _
@@ -44,106 +50,105 @@ Public Function getTable() As ListObject
     columns _
   )
 
-  Set getTable = newSheet.ListObjects(1)
+  Set tableReference = newSheet.ListObjects(1)
 
-  With getTable.ListColumns("Data de Entrada").Range
+  With tableReference.ListColumns("Data de Entrada").Range
     .HorizontalAlignment = xlHAlignCenter
   End With
 
-  With getTable.ListColumns("Tipo").Range
+  With tableReference.ListColumns("Tipo").Range
     .ColumnWidth = 15
     .HorizontalAlignment = xlHAlignCenter
   End With
 
-  With getTable.ListColumns("Nome").Range
+  With tableReference.ListColumns("Nome").Range
     .ColumnWidth = 35
   End With
 
-  With getTable.ListColumns("CPF / CNPJ").Range
+  With tableReference.ListColumns("CPF / CNPJ").Range
     .ColumnWidth = 19
     .HorizontalAlignment = xlHAlignCenter
   End With
 
-  With getTable.ListColumns("Faixa Etária").Range
+  With tableReference.ListColumns("Faixa Etária").Range
     .ColumnWidth = 10
     .HorizontalAlignment = xlHAlignCenter
   End With
 
-  With getTable.ListColumns("País M49").Range
+  With tableReference.ListColumns("País M49").Range
     .ColumnWidth = 10
     .HorizontalAlignment = xlHAlignCenter
   End With
 
-  With getTable.ListColumns("Qualificação ID").Range
+  With tableReference.ListColumns("Qualificação ID").Range
     .ColumnWidth = 12
     .HorizontalAlignment = xlHAlignCenter
   End With
 
-  With getTable.ListColumns("Qualificação").Range
+  With tableReference.ListColumns("Qualificação").Range
     .ColumnWidth = 30
   End With
 
-  With getTable.ListColumns("Representante Nome").Range
+  With tableReference.ListColumns("Representante Nome").Range
     .ColumnWidth = 35
   End With
 
-  With getTable.ListColumns("Representante CPF").Range
+  With tableReference.ListColumns("Representante CPF").Range
     .HorizontalAlignment = xlHAlignCenter
   End With
 
-  With getTable.ListColumns("Representante Qualificação ID").Range
+  With tableReference.ListColumns("Representante Qualificação ID").Range
     .HorizontalAlignment = xlHAlignCenter
   End With
 
-  With getTable.ListColumns("Representante Qualificação").Range
+  With tableReference.ListColumns("Representante Qualificação").Range
     .ColumnWidth = 30
   End With
 
-  getTable.ListColumns("Última Atualização").Range.ColumnWidth = 19
+  tableReference.ListColumns("Última Atualização").Range.ColumnWidth = 19
+  Set getTable = tableReference
 End Function
 
 ''
 ' Load API response data into the table
 ''
 Public Function loadData(Response As WebResponse)
-  Dim table As ListObject
   Dim row As Range
   Dim member As Dictionary
   
-  Set table = getTable()
-  SheetService.deleteRowsById table, "Estabelecimento", Response.Data("taxId")
+  SheetService.deleteRowsById tableReference, "Estabelecimento", Response.Data("taxId")
  
   For Each member In Response.Data("company")("members")
-    Set row = table.ListRows.Add.Range
+    Set row = tableReference.ListRows.Add.Range
 
-    row(table.ListColumns("Estabelecimento").Index) = Response.Data("taxId")
-    row(table.ListColumns("Razão Social").Index) = Response.Data("company")("name")
-    row(table.ListColumns("Data de Entrada").Index) = member("since")
-    row(table.ListColumns("Nome").Index) = member("person")("name")
-    row(table.ListColumns("CPF / CNPJ").Index) = member("person")("taxId")
-    row(table.ListColumns("Faixa Etária").Index) = member("person")("age")
-    row(table.ListColumns("Qualificação ID").Index) = member("role")("id")
-    row(table.ListColumns("Qualificação").Index) = member("role")("text")
-    row(table.ListColumns("Última Atualização").Index) = WebHelpers.ParseIso(Response.Data("updated"))
+    row(tableReference.ListColumns("Estabelecimento").Index) = Response.Data("taxId")
+    row(tableReference.ListColumns("Razão Social").Index) = Response.Data("company")("name")
+    row(tableReference.ListColumns("Data de Entrada").Index) = member("since")
+    row(tableReference.ListColumns("Nome").Index) = member("person")("name")
+    row(tableReference.ListColumns("CPF / CNPJ").Index) = member("person")("taxId")
+    row(tableReference.ListColumns("Faixa Etária").Index) = member("person")("age")
+    row(tableReference.ListColumns("Qualificação ID").Index) = member("role")("id")
+    row(tableReference.ListColumns("Qualificação").Index) = member("role")("text")
+    row(tableReference.ListColumns("Última Atualização").Index) = WebHelpers.ParseIso(Response.Data("updated"))
 
     If member("person")("type") = "NATURAL" Then
-      row(table.ListColumns("Tipo").Index) = "Pessoa Física"
+      row(tableReference.ListColumns("Tipo").Index) = "Pessoa Física"
     ElseIf member("person")("type") = "LEGAL" Then
-      row(table.ListColumns("Tipo").Index) = "Pessoa Jurídica"
+      row(tableReference.ListColumns("Tipo").Index) = "Pessoa Jurídica"
     ElseIf member("person")("type") = "FOREIGN" Then
-      row(table.ListColumns("Tipo").Index) = "Pessoa Jurídica Estrangeira"
+      row(tableReference.ListColumns("Tipo").Index) = "Pessoa Jurídica Estrangeira"
     End If
 
     If member.Exists("country") Then
-      row(table.ListColumns("País M49").Index) = member("country")("id")
-      row(table.ListColumns("País").Index) = member("country")("name")
+      row(tableReference.ListColumns("País M49").Index) = member("country")("id")
+      row(tableReference.ListColumns("País").Index) = member("country")("name")
     End If
 
     If member.Exists("agent") Then
-      row(table.ListColumns("Representante Nome").Index) = member("agent")("person")("name")
-      row(table.ListColumns("Representante CPF").Index) = member("agent")("person")("taxId")
-      row(table.ListColumns("Representante Qualificação ID").Index) = member("agent")("role")("id")
-      row(table.ListColumns("Representante Qualificação").Index) = member("agent")("role")("text")
+      row(tableReference.ListColumns("Representante Nome").Index) = member("agent")("person")("name")
+      row(tableReference.ListColumns("Representante CPF").Index) = member("agent")("person")("taxId")
+      row(tableReference.ListColumns("Representante Qualificação ID").Index) = member("agent")("role")("id")
+      row(tableReference.ListColumns("Representante Qualificação").Index) = member("agent")("role")("text")
     End If
   Next member
 End Function

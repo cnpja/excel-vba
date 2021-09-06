@@ -45,6 +45,8 @@ Public Sub startQueue(ByRef control As Office.IRibbonControl)
 
   CnpjaService.readMeCredit
   queueTable.ListColumns("Situação").Range.Replace "Pausado", "Pendente"
+
+  QueueService.setupEnvironment
   QueueService.startRequests
 End Sub
 

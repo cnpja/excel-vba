@@ -53,6 +53,36 @@ Public Function countError() As Long
 End Function
 
 ''
+' Ensures everyting required to call the API is in order:
+' - Disable formula auto fill
+' - Disable number as text and inconsistent formula warnings
+' - Ask user his API key if not configured yet
+' - Create tables if not present
+''
+Public Function setupEnvironment()
+  ConfigService.delKey "QUEUE", "FULFILLING"
+
+  Application.AutoCorrect.AutoFillFormulasInLists = False
+  Application.ErrorCheckingOptions.InconsistentTableFormula = False
+  Application.ErrorCheckingOptions.NumberAsText = False
+  Application.ScreenUpdating = False
+
+  QueueSheet.getTable
+  OfficeSheet.getTable
+  MemberSheet.getTable
+  PhoneSheet.getTable
+  EmailSheet.getTable
+  ActivitySheet.getTable
+  SimplesSheet.getTable
+  CccSheet.getTable
+
+  Application.ScreenUpdating = True
+
+  RibbonController.activate
+  CnpjaService.readMe
+End Function
+
+''
 ' Asks the user to select a range containg data list (1 column, multiple rows)
 ''
 Public Function askInputData(displayName As String) As Range
@@ -122,6 +152,7 @@ End Function
 Public Function startRequests()
   Dim maxConcurrency As Integer
   Dim queueTable As ListObject
+  Dim queueRowId As Long
   Dim queueRow As ListRow
   Dim requestId As Range
   Dim requestQuery As Range
@@ -132,7 +163,6 @@ Public Function startRequests()
   Dim taxId As String
 
   ConfigService.setKey "QUEUE", "STARTING", "True"
-  ConfigService.delKey "QUEUE", "FULFILLING"
 
   maxConcurrency = CInt(ConfigService.getKey("QUEUE", "CONCURRENCY"))
   If countProcessing() >= maxConcurrency Then Exit Function
@@ -144,33 +174,34 @@ Public Function startRequests()
 
   Set queueTable = QueueSheet.getTable()
 
-  For Each queueRow In queueTable.ListRows
+  Do While countProcessing() < maxConcurrency
+    Set requestStatus = queueTable.ListColumns("Situação").Range.Find("Pendente", LookIn:=xlValues)
+    If requestStatus Is Nothing Then Exit Do
+
+    queueRowId = queueTable.ListRows(requestStatus.Row - queueTable.HeaderRowRange.Row).Index
+    Set queueRow = queueTable.ListRows(queueRowId)
+
     Set requestId = queueRow.Range.Cells(1, queueTable.ListColumns("ID").Index)
     Set requestQuery = queueRow.Range.Cells(1, queueTable.ListColumns("Consulta").Index)
     Set requestType = queueRow.Range.Cells(1, queueTable.ListColumns("Tipo").Index)
-    Set requestStatus = queueRow.Range.Cells(1, queueTable.ListColumns("Situação").Index)
     Set requestDate = queueRow.Range.Cells(1, queueTable.ListColumns("Horário de Processamento").Index)
     Set requestMessage = queueRow.Range.Cells(1, queueTable.ListColumns("Mensagem").Index)
 
-    If requestStatus.Value = "Pendente" Then
-      If countProcessing() >= maxConcurrency Then Exit For
+    requestDate.Value = Now
+    requestStatus.Formula = "=IF((NOW()-[@[Horário de Processamento]])*1440>1,""Falha"",""Processando"")"
+    requestMessage.Formula = "=IF((NOW()-[@[Horário de Processamento]])*1440>1,""Tempo de processamento excedido"",""Em andamento, aguarde..."")"
+    UtilService.resetStyle requestMessage
 
-      requestDate.Value = Now
-      requestStatus.Formula = "=IF((NOW()-[@[Horário de Processamento]])*1440>1,""Falha"",""Processando"")"
-      requestMessage.Formula = "=IF((NOW()-[@[Horário de Processamento]])*1440>1,""Tempo de processamento excedido"",""Em andamento, aguarde..."")"
-      UtilService.resetStyle requestMessage
+    Select Case requestType.Value
+      Case "CNPJ"
+        taxId = UtilService.stringToDigits(requestQuery.Value)
+        CnpjaService.readOfficeByTaxId requestId.Value, taxId
 
-      Select Case requestType.Value
-        Case "CNPJ"
-          taxId = UtilService.stringToDigits(requestQuery.Value)
-          CnpjaService.readOfficeByTaxId requestId.Value, taxId
-
-        Case Else
-          requestStatus.Value = "Incorreto"
-          requestMessage.Value = "Consulta não suportada"
-      End Select
-    End If
-  Next queueRow
+      Case Else
+        requestStatus.Value = "Incorreto"
+        requestMessage.Value = "Consulta não suportada"
+    End Select
+  Loop
 
   ConfigService.delKey "QUEUE", "STARTING"
 End Function
@@ -180,6 +211,7 @@ End Function
 ''
 Public Function fulfillRequest(Response As WebResponse, requestIdValue As Long)
   Dim queueTable As ListObject
+  Dim queueRowId As Long
   Dim queueRow As ListRow
   Dim requestId As Range
   Dim requestType As Range
@@ -196,77 +228,72 @@ Public Function fulfillRequest(Response As WebResponse, requestIdValue As Long)
   Loop While isFulfilling = "True"
 
   ConfigService.setKey "QUEUE", "FULFILLING", "True"
-
   disableUpdates
 
   Set queueTable = QueueSheet.getTable()
-  
-  For Each queueRow In queueTable.ListRows
-    Set requestId = queueRow.Range.Cells(1, queueTable.ListColumns("ID").Index)
-    Set requestType = queueRow.Range.Cells(1, queueTable.ListColumns("Tipo").Index)
-    Set requestStatus = queueRow.Range.Cells(1, queueTable.ListColumns("Situação").Index)
-    Set requestCost = queueRow.Range.Cells(1, queueTable.ListColumns("Custo").Index)
-    Set requestMessage = queueRow.Range.Cells(1, queueTable.ListColumns("Mensagem").Index)
 
-    If requestId.Value = requestIdValue Then
-      Application.GoTo requestId
-      requestCost.Value = FindInKeyValues(Response.Headers, "cnpja-request-cost")
+  Set requestId = queueTable.ListColumns("ID").Range.Find(requestIdValue, LookIn:=xlValues)
+  queueRowId = queueTable.ListRows(requestId.Row - queueTable.HeaderRowRange.Row).Index
+  Set queueRow = queueTable.ListRows(queueRowId)
 
-      Select Case Response.StatusCode
-        Case 200
-          requestStatus.Value = "Sucesso"
-          requestMessage.Value = ""
+  Set requestType = queueRow.Range.Cells(1, queueTable.ListColumns("Tipo").Index)
+  Set requestStatus = queueRow.Range.Cells(1, queueTable.ListColumns("Situação").Index)
+  Set requestCost = queueRow.Range.Cells(1, queueTable.ListColumns("Custo").Index)
+  Set requestMessage = queueRow.Range.Cells(1, queueTable.ListColumns("Mensagem").Index)
 
-          Select Case requestType.Value
-            Case "CNPJ"
-              OfficeSheet.loadData Response
-              MemberSheet.loadData Response
-              PhoneSheet.loadData Response
-              EmailSheet.loadData Response
-              ActivitySheet.loadData Response
-              SimplesSheet.loadData Response
-              CccSheet.loadData Response
-          End Select
+  Application.GoTo requestId
+  requestCost.Value = FindInKeyValues(Response.Headers, "cnpja-request-cost")
 
-        Case 400
-          requestStatus.Value = "Incorreto"
-          requestMessage.Value = requestType.Value & " inválido"
+  Select Case Response.StatusCode
+    Case 200
+      requestStatus.Value = "Sucesso"
+      requestMessage.Value = ""
 
-        Case 401
-          requestStatus.Value = "Falha"
-          requestMessage.Value = "Falha de autenticação"
-
-        Case 404
-          requestStatus.Value = "Incorreto"
-          requestMessage.Value = requestType.Value & " inexistente"
-
-        Case 429
-          requestStatus.Value = "Falha"
-          If InStr(Response.Data("message"), "credits") > 0 Then
-            requestMessage.Value = "Créditos insuficientes"
-          Else
-            requestMessage.Value = "Limite por minuto excedido"
-          End If
-
-        Case 500
-          requestStatus.Value = "Falha"
-          requestMessage.Value = "Um problema inesperado ocorreu"
-
-        Case 503
-          requestStatus.Value = "Falha"
-          requestMessage.Value = "Plataforma indisponível no momento"
-
-        Case 504
-          requestStatus.Value = "Falha"
-          requestMessage.Value = "Tempo de processamento excedido"
+      Select Case requestType.Value
+        Case "CNPJ"
+          OfficeSheet.loadData Response
+          MemberSheet.loadData Response
+          PhoneSheet.loadData Response
+          EmailSheet.loadData Response
+          ActivitySheet.loadData Response
+          SimplesSheet.loadData Response
+          CccSheet.loadData Response
       End Select
 
-      Exit For
-    End If
-  Next queueRow
+    Case 400
+      requestStatus.Value = "Incorreto"
+      requestMessage.Value = requestType.Value & " inválido"
+
+    Case 401
+      requestStatus.Value = "Falha"
+      requestMessage.Value = "Falha de autenticação"
+
+    Case 404
+      requestStatus.Value = "Incorreto"
+      requestMessage.Value = requestType.Value & " inexistente"
+
+    Case 429
+      requestStatus.Value = "Falha"
+      If InStr(Response.Data("message"), "credits") > 0 Then
+        requestMessage.Value = "Créditos insuficientes"
+      Else
+        requestMessage.Value = "Limite por minuto excedido"
+      End If
+
+    Case 500
+      requestStatus.Value = "Falha"
+      requestMessage.Value = "Um problema inesperado ocorreu"
+
+    Case 503
+      requestStatus.Value = "Falha"
+      requestMessage.Value = "Plataforma indisponível no momento"
+
+    Case 504
+      requestStatus.Value = "Falha"
+      requestMessage.Value = "Tempo de processamento excedido"
+  End Select
 
   enableUpdates
-
   ConfigService.delKey "QUEUE", "FULFILLING"
 
   If ConfigService.getKey("QUEUE", "STARTING") <> "True" Then
