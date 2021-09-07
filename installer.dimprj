@@ -3,13 +3,13 @@
   <name>InstallerSave</name>
   <version>1.1.1.0</version>
   <appName>CNPJá! Excel Add-in</appName>
-  <appVersion>v1.0.2</appVersion>
+  <appVersion>v1.1.0</appVersion>
   <appPublisher>CNPJA TECNOLOGIA LTDA</appPublisher>
   <appWebsite>https://www.cnpja.com</appWebsite>
   <installDirectoryCheckbox>False</installDirectoryCheckbox>
-  <license>False</license>
-  <licenseText></licenseText>
-  <licenseStyle>0</licenseStyle>
+  <license>True</license>
+  <licenseText>C:\Cloud\MEGA\Projects\cnpja\excel-vba\LICENSE.txt</licenseText>
+  <licenseStyle>1</licenseStyle>
   <customDisplayIcon>True</customDisplayIcon>
   <customDisplayIconText>C:\Cloud\MEGA\Projects\cnpja\excel-vba\assets\logo_512x512.ico</customDisplayIconText>
   <customInstall>True</customInstall>
@@ -31,7 +31,6 @@
   <FinishPageCheckBox2>False</FinishPageCheckBox2>
   <FinishPageSelection2 />
   <langList>
-    <Lang>English</Lang>
     <Lang>Portuguese (Brazilian)</Lang>
   </langList>
   <groupList>

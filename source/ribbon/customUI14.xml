@@ -277,7 +277,7 @@ Envie seus comentários sobre a ferramenta e entraremos em contato assim que pos
           <!-- Help: Version -->
           <labelControl
             id="lc-help-version"
-            label="  v1.0.2"
+            label="  v1.1.0"
           />
         </group>
       </tab>
