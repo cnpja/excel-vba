@@ -68,6 +68,7 @@ Public Function getTable() As ListObject
   With tableReference.ListColumns("CPF / CNPJ").Range
     .ColumnWidth = 19
     .HorizontalAlignment = xlHAlignCenter
+    .NumberFormat = "@"
   End With
 
   With tableReference.ListColumns("Faixa Etária").Range
@@ -95,6 +96,7 @@ Public Function getTable() As ListObject
 
   With tableReference.ListColumns("Representante CPF").Range
     .HorizontalAlignment = xlHAlignCenter
+    .NumberFormat = "@"
   End With
 
   With tableReference.ListColumns("Representante Qualificação ID").Range
