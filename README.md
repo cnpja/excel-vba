@@ -4,7 +4,7 @@
 
 Add-in para Excel, escrito em VBA, que permite consultar as informações de uma empresa na Receita Federal, Simples Nacional e Cadastro de Contribuintes.
 
-![image](assets/add-in_preview.png)
+![image](assets/preview.gif)
 
 
 ## Utilização
@@ -13,7 +13,7 @@ Este repositório contém o código fonte e documentação referente a desenvolv
 
 Para instruções sobre como instalar ou utilizar a ferramenta acesse o guia oficial em:
 
-[CNPJá! Documentação - Excel](https://docs.cnpja.com/excel)
+[CNPJá! Documentação - Excel](https://docs.cnpja.com/excel/installation)
 
 
 ## Requisitos de Sistema
