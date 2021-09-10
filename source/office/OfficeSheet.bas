@@ -27,6 +27,7 @@ Public Function getTable() As ListObject
   columns = Array( _
     "Estabelecimento", _
     "Razão Social", _
+    "Recibo", _
     "Porte ID", "Porte", _
     "Capital Social", _
     "Natureza Jurídica ID", "Natureza Jurídica", _
@@ -37,7 +38,8 @@ Public Function getTable() As ListObject
     "Matriz", _
     "Situação ID", "Situação", "Situação Data", _
     "Telefones", "E-mails", _
-    "Município IBGE", "Logradouro", "Número", "Complemento", "Bairro", "Cidade", "Estado", "CEP", "País", _
+    "Município IBGE", "Mapa Aéreo", "Visão da Rua", _
+    "Logradouro", "Número", "Complemento", "Bairro", "Cidade", "Estado", "CEP", "País", _
     "Atividade Principal ID", "Atividade Principal", "Atividades Secundárias", _
     "Inscrições Estaduais", _
     "Situação Motivo ID", "Situação Motivo", _
@@ -53,6 +55,21 @@ Public Function getTable() As ListObject
   )
 
   Set tableReference = newSheet.ListObjects(1)
+
+  With tableReference.ListColumns("Recibo").Range
+    .ColumnWidth = 10
+    .HorizontalAlignment = xlHAlignCenter
+  End With
+
+  With tableReference.ListColumns("Mapa Aéreo").Range
+    .ColumnWidth = 10
+    .HorizontalAlignment = xlHAlignCenter
+  End With
+
+  With tableReference.ListColumns("Visão da Rua").Range
+    .ColumnWidth = 10
+    .HorizontalAlignment = xlHAlignCenter
+  End With
 
   With tableReference.ListColumns("Porte ID").Range
     .ColumnWidth = 10
@@ -213,6 +230,7 @@ End Function
 ''
 Public Function loadData(Response As WebResponse)
   Dim row As Range
+  Dim link As Dictionary
 
   Set row = SheetService.getRow(tableReference, "Estabelecimento", Response.Data("taxId"))
 
@@ -262,4 +280,15 @@ Public Function loadData(Response As WebResponse)
   If Response.Data.Exists("registrations") Then
     row(tableReference.ListColumns("Inscrições Estaduais").Index) = Response.Data("registrations").Count
   End If
+
+  For Each link In Response.Data("links")
+    Select Case link("type")
+      Case "RFB_CERTIFICATE"
+        UtilService.createLink row(tableReference.ListColumns("Recibo").Index), link("url"), ChrW(&HD83D) & ChrW(&HDCE5) & " PDF"
+      Case "OFFICE_MAP"
+        UtilService.createLink row(tableReference.ListColumns("Mapa Aéreo").Index), link("url"), ChrW(&HD83D) & ChrW(&HDCE5) & " PNG"
+      Case "OFFICE_STREET"
+        UtilService.createLink row(tableReference.ListColumns("Visão da Rua").Index), link("url"), ChrW(&HD83D) & ChrW(&HDCE5) & " PNG"
+    End Select
+  Next link
 End Function

@@ -27,6 +27,7 @@ Public Function getTable() As ListObject
   columns = Array( _
     "Estabelecimento", _
     "Razão Social", _
+    "Recibo", _
     "Simples Nacional Optante", _
     "Simples Nacional Inclusão", _
     "SIMEI Optante", _
@@ -48,6 +49,11 @@ Public Function getTable() As ListObject
   End With
 
   Set tableReference = newSheet.ListObjects(1)
+
+  With tableReference.ListColumns("Recibo").Range
+    .ColumnWidth = 10
+    .HorizontalAlignment = xlHAlignCenter
+  End With
 
   With tableReference.ListColumns("Simples Nacional Optante").Range
     .ColumnWidth = 10
@@ -76,6 +82,7 @@ End Function
 ''
 Public Function loadData(Response As WebResponse)
   Dim row As Range
+  Dim link As Dictionary
 
   If Not (Response.Data("company").Exists("simples")) Then Exit Function
 
@@ -88,4 +95,11 @@ Public Function loadData(Response As WebResponse)
   row(tableReference.ListColumns("SIMEI Optante").Index) = UtilService.booleanToString(Response.Data("company")("simei")("optant"))
   row(tableReference.ListColumns("SIMEI Inclusão").Index) = Response.Data("company")("simei")("since")
   row(tableReference.ListColumns("Última Atualização").Index) = WebHelpers.ParseIso(Response.Data("updated"))
+
+  For Each link In Response.Data("links")
+    Select Case link("type")
+      Case "SIMPLES_CERTIFICATE"
+        UtilService.createLink row(tableReference.ListColumns("Recibo").Index), link("url"), ChrW(&HD83D) & ChrW(&HDCE5) & " PDF"
+    End Select
+  Next link
 End Function

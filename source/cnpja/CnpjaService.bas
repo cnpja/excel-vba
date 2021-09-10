@@ -87,9 +87,13 @@ End Function
 Public Function readOfficeByTaxId(requestId As Long, taxId As String)
   Dim Request As New WebRequest
   Request.Resource = "office/" & taxId
+
   buildOfficeMaxAge Request
   buildOfficeEmbeds Request
+
+  Request.AddQuerystringParam "links", "RFB_CERTIFICATE,SIMPLES_CERTIFICATE,OFFICE_MAP,OFFICE_STREET"
   Request.AddQuerystringParam "sync", "true"
+
   Cnpja.ExecuteAsync Request, "callback", requestId
 End Function
 

@@ -21,40 +21,17 @@ WorkbookFollow:
 End Function
 
 ''
-' Builds a hyperlink to target table, and sets the reference to a cell that matches
-' lookup with column name
-' (not in use due to performance issues when calculating)
+' Builds a hyperlink to URL at target cell and apply custom styling
 ''
-Private Function createLink(cell As Range, table As String, column As String, lookupValue As Variant, displayFormula As Variant)
-  cell.Formula = _
-    "=IFERROR(HYPERLINK(""#""&CELL(""address""," & _
-    "INDEX(" & table & "[" & column & "]," & _
-    "MATCH(""" & lookupValue & """," & table & "[" & column & "],0)" & _
-    "))," & displayFormula & "),0)"
-
+Public Function createLink(cell As Range, url As String, label As String)
   With cell
+    .Hyperlinks.Add cell, url, , "Abre o arquivo em seu navegador, sujeito a cobrança de créditos por clique.", label
     .Font.Name = "Lato"
     .Font.Size = 10.5
     .Font.Bold = True
     .Font.Underline = xlUnderlineStyleNone
     .Font.Color = RGB(0, 161, 96)
   End With
-End Function
-
-''
-' Shortcut for office link creation by tax id
-' (not in use due to performance issues when calculating)
-''
-Private Function createTaxIdLink(cell As Range, taxId As Variant)
-  createLink cell, "CNPJA_ESTABELECIMENTOS", "Estabelecimento", taxId, """" & taxId & """"
-End Function
-
-''
-' Shortcut for office link creation by tax id
-' (not in use due to performance issues when calculating)
-''
-Private Function createCountLink(cell As Range, taxId As Variant, target As String) As String
-  createLink cell, target, "Estabelecimento", taxId, "COUNTIF(" & target & "[Estabelecimento],[@Estabelecimento])"
 End Function
 
 ''
