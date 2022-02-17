@@ -7,6 +7,19 @@
         <!-- Account Group -->
         <group id="g-account" label="Minha Conta">
 
+          <!-- Account: Update -->
+          <button
+            id="b-account-update"
+            label="Atualização Disponível"
+            getVisible="CnpjaController.getUpdateVisible"
+            imageMso="AnimationCustomEmphasisDialog"
+            size="large"
+            onAction="CnpjaController.openExcel"
+            screentip="Baixar Atualização"
+            supertip="Uma nova atualização da ferramenta encontra-se disponível!&#13;&#13;
+Clique para acessar a página de download e ter acesso as novas funcionalidades."
+          />
+
           <!-- Account: Name -->
           <button
             id="b-account-name"
@@ -72,8 +85,6 @@ Se a fila estiver vazia, você pode clicar em 'Consultar CNPJs' e marcá-los par
             supertip="Interrompe a execução dos itens adicionados a fila de consultas"
           />
 
-          <separator id="s-queue"/>
-
           <!-- Queue: Retry -->
           <button
             id="b-queue-retry"
@@ -138,8 +149,6 @@ Os dados serão salvos nas planilhas:&#13;
 📧 E-mails&#13;
 🌿 Atividades Econômicas"
           />
-
-          <separator id="s-office"/>
 
           <!-- Office: Simples -->
           <toggleButton
@@ -251,8 +260,6 @@ Por outro lado, as que não atenderem serão realizadas 'Online' e debitarão o 
             supertip="Abre o Guia Rápido CNPJá!, que resume tudo que precisa saber para utilizar a ferramenta de forma sucinta e objetiva."
           />
 
-          <separator id="s-help"/>
-
           <!-- Help: Status -->
           <button
             id="b-help-status"
@@ -277,7 +284,7 @@ Envie seus comentários sobre a ferramenta e entraremos em contato assim que pos
           <!-- Help: Version -->
           <labelControl
             id="lc-help-version"
-            label="  v1.2.0"
+            getLabel="CnpjaController.getVersionLabel"
           />
         </group>
       </tab>

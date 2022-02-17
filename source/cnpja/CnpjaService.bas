@@ -9,6 +9,7 @@ Attribute VB_Name = "CnpjaService"
 Option Explicit
 
 Private cnpjaClient As WebAsyncWrapper
+Private latestVersion As String
 
 ''
 ' Build the base adapter for requests to CNPJá! API
@@ -128,4 +129,31 @@ Public Function readOfficeByTaxId(requestId As Long, taxId As String)
   Request.AddQuerystringParam "sync", "true"
 
   Cnpja.ExecuteAsync Request, "callback", requestId
+End Function
+
+''
+' [Sync] Read current tool version
+''
+Public Function getCurrentVersion() as String
+  getCurrentVersion = "1.2.0"
+End Function
+
+''
+' [Sync] Read latest tool version, cache result to prevent unnecessary requests
+''
+Public Function getLatestVersion() as String
+  Dim req As Object
+  Dim url As String
+
+  If latestVersion = "" Then
+    url = "https://raw.githubusercontent.com/cnpja/excel-vba/master/.cnpja-version"
+
+    Set req = CreateObject("MSXML2.XMLHTTP")
+    req.Open "GET", url, False
+    req.Send
+
+    latestVersion = req.ResponseText
+  End If
+
+  getLatestVersion = latestVersion
 End Function

@@ -28,6 +28,30 @@ Public Sub getAccountCredits(ByRef control As Office.IRibbonControl, ByRef label
 End Sub
 
 ''
+' Getter of b-account-update visible
+''
+Public Sub getUpdateVisible(ByRef control As Office.IRibbonControl, ByRef visible)
+  Dim currentVersion As String
+  Dim lastestVersion As String
+
+  currentVersion = CnpjaService.getCurrentVersion
+  lastestVersion = CnpjaService.getLatestVersion
+
+  If currentVersion <>  lastestVersion Then
+    visible = True
+  Else
+    visible = False
+  End If
+End Sub
+
+''
+' Handler of b-account-update
+''
+Public Sub openExcel(ByRef control As Office.IRibbonControl)
+  UtilService.openUrl "https://www.cnpja.com/excel"
+End Sub
+
+''
 ' Handler of b-account-name
 ''
 Public Sub openMe(ByRef control As Office.IRibbonControl)
@@ -75,4 +99,13 @@ End Sub
 ''
 Public Sub openStatus(ByRef control As Office.IRibbonControl)
   UtilService.openUrl "https://status.cnpja.com"
+End Sub
+
+''
+' Handler of lc-help-version label
+''
+Public Sub getVersionLabel(ByRef control As Office.IRibbonControl, ByRef label)
+  Dim version As String
+  version = CnpjaService.getCurrentVersion
+  label = "  v" & version
 End Sub
