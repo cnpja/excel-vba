@@ -151,11 +151,12 @@ Public Function getTable() As ListObject
 
   With tableReference.ListColumns("Número").Range
     .ColumnWidth = 10
+    .NumberFormat = "@"
     .HorizontalAlignment = xlHAlignCenter
   End With
 
   With tableReference.ListColumns("Complemento").Range
-  
+    .NumberFormat = "@"
   End With
 
   With tableReference.ListColumns("Bairro").Range
@@ -173,6 +174,7 @@ Public Function getTable() As ListObject
 
   With tableReference.ListColumns("CEP").Range
     .ColumnWidth = 10
+    .NumberFormat = "@"
     .HorizontalAlignment = xlHAlignCenter
   End With
 
