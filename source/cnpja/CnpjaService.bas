@@ -86,44 +86,25 @@ End Function
 ''
 Public Function readOfficeByTaxId(requestId As Long, taxId As String)
   Dim Request As New WebRequest
-  Request.Resource = "office/" & taxId
-
-  buildOfficeMaxAge Request
-  buildOfficeEmbeds Request
-
-  Request.AddQuerystringParam "links", "RFB_CERTIFICATE,SIMPLES_CERTIFICATE,OFFICE_MAP,OFFICE_STREET"
-  Request.AddQuerystringParam "sync", "true"
-
-  Cnpja.ExecuteAsync Request, "callback", requestId
-End Function
-
-''
-' Build the max age query param
-''
-Private Function buildOfficeMaxAge(Request As WebRequest)
   Dim maxAge As String
-  maxAge = ConfigService.getKey("OFFICE", "MAX_AGE")
-  If maxAge = Empty Then maxAge = "30"
-  Request.AddQuerystringParam "maxAge", maxAge
-End Function
-
-''
-' Build the office embeds query params which may contain CCC and/or SIMPLES
-''
-Private Function buildOfficeEmbeds(Request As WebRequest)
-  Dim embeds As String
-  Dim embedSimples As String
+  Dim simplesPressed As String
+  Dim cccPressed As String
+  Dim registrations As String
   Dim states() As Variant
   Dim state As Variant
-  Dim cccPressed As String
-  Dim cccStates As String
 
-  embeds = ""
-  cccStates = ""
+  Request.Resource = "office/" & taxId
 
-  embedSimples = ConfigService.getKey("RIBBON", "tb-office-simples")
-  If embedSimples = "True" Then embeds = embeds & "SIMPLES,"
+  ' Add `maxAge`
+  maxAge = ConfigService.getKey("OFFICE", "MAX_AGE")
+  If maxAge <> Empty Then Request.AddQuerystringParam "maxAge", maxAge
 
+  ' Add `simples`
+  simplesPressed = ConfigService.getKey("RIBBON", "tb-office-simples")
+  If simplesPressed = "True" Then Request.AddQuerystringParam "simples", "true"
+
+  ' Add `registrations`
+  registrations = ""
   states = Array("ac", "al", "ap", "am", "ba", "ce", "df", "es", "go", "ma", "mg", "mt", "ms", _
     "pa", "pb", "pr", "pe", "pi", "rj", "rn", "rs", "ro", "rr", "sc", "sp", "se", "to")
 
@@ -131,18 +112,20 @@ Private Function buildOfficeEmbeds(Request As WebRequest)
     cccPressed = ConfigService.getKey("RIBBON", "cb-office-ccc-" & state)
 
     If cccPressed = "True" Then
-      cccStates = cccStates & UCase(state) & ","
+      registrations = registrations & UCase(state) & ","
     End If
   Next state
 
-  If cccStates <> "" Then
-    cccStates = Left(cccStates, Len(cccStates) - 1)
-    Request.AddQuerystringParam "cccStates", cccStates
-    embeds = embeds & "CCC,"
+  If registrations <> "" Then
+    registrations = Left(registrations, Len(registrations) - 1)
+    Request.AddQuerystringParam "registrations", registrations
   End If
 
-  If embeds <> "" Then
-    embeds = Left(embeds, Len(embeds) - 1)
-    Request.AddQuerystringParam "embeds", embeds
-  End If
+  ' Add `links`
+  Request.AddQuerystringParam "links", "RFB_CERTIFICATE,SIMPLES_CERTIFICATE,OFFICE_MAP,OFFICE_STREET"
+
+  ' Add `sync` in order to acquire request cost after fulfillment
+  Request.AddQuerystringParam "sync", "true"
+
+  Cnpja.ExecuteAsync Request, "callback", requestId
 End Function
