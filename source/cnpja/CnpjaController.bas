@@ -37,7 +37,7 @@ Public Sub getUpdateVisible(ByRef control As Office.IRibbonControl, ByRef visibl
   currentVersion = CnpjaService.getCurrentVersion
   lastestVersion = CnpjaService.getLatestVersion
 
-  If currentVersion <>  lastestVersion Then
+  If currentVersion <> lastestVersion Then
     visible = True
   Else
     visible = False

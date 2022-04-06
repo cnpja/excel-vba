@@ -226,7 +226,7 @@ Private Sub web_StartTimeoutTimer()
     End If
 
     WebHelpers.AsyncRequests.Add Me.Request.Id, Me
-    Application.OnTime Now + TimeValue("00:00:" & web_TimeoutS), "'WebHelpers.OnTimeoutTimerExpired """ & Me.Request.Id & """'"
+    Application.onTime Now + TimeValue("00:00:" & web_TimeoutS), "'WebHelpers.OnTimeoutTimerExpired """ & Me.Request.Id & """'"
 End Sub
 
 ' Stop timeout timer

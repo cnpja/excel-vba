@@ -134,14 +134,14 @@ End Function
 ''
 ' [Sync] Read current tool version
 ''
-Public Function getCurrentVersion() as String
+Public Function getCurrentVersion() As String
   getCurrentVersion = "1.2.0"
 End Function
 
 ''
 ' [Sync] Read latest tool version, cache result to prevent unnecessary requests
 ''
-Public Function getLatestVersion() as String
+Public Function getLatestVersion() As String
   Dim req As Object
   Dim url As String
 

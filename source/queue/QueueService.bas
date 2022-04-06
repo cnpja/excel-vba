@@ -20,7 +20,7 @@ Option Explicit
 ' Count pending items
 ''
 Public Function countPending() As Long
-  SetForegroundWindow(appHwnd)
+  SetForegroundWindow (appHwnd)
   countPending = 0
   Dim queueTable As ListObject
   Set queueTable = QueueSheet.getTable(True)
@@ -32,7 +32,7 @@ End Function
 ' Count paused items
 ''
 Public Function countPaused() As Long
-  SetForegroundWindow(appHwnd)
+  SetForegroundWindow (appHwnd)
   countPaused = 0
   Dim queueTable As ListObject
   Set queueTable = QueueSheet.getTable(True)
@@ -44,7 +44,7 @@ End Function
 ' Count processing items
 ''
 Public Function countProcessing() As Long
-  SetForegroundWindow(appHwnd)
+  SetForegroundWindow (appHwnd)
   countProcessing = 0
   Dim queueTable As ListObject
   Set queueTable = QueueSheet.getTable(True)
@@ -56,7 +56,7 @@ End Function
 ' Count error items
 ''
 Public Function countError() As Long
-  SetForegroundWindow(appHwnd)
+  SetForegroundWindow (appHwnd)
   countError = 0
   Dim queueTable As ListObject
   Set queueTable = QueueSheet.getTable(True)
@@ -107,7 +107,7 @@ End Function
 ' - Create tables if not present
 ''
 Public Function setupEnvironment()
-  appHwnd = Application.hwnd
+  appHwnd = Application.hWnd
   ConfigService.delKey "QUEUE", "FULFILLING"
 
   Application.AutoCorrect.AutoFillFormulasInLists = False
@@ -151,7 +151,7 @@ End Function
 ' Pauses all pending requests
 ''
 Public Function pauseRequests()
-  SetForegroundWindow(appHwnd)
+  SetForegroundWindow (appHwnd)
   Dim queueTable As ListObject
   Set queueTable = QueueSheet.getTable()
 
@@ -190,7 +190,7 @@ End Function
 ' Schedules a procedure that periodically checks for failed requests
 ''
 Public Function processRequestsWithHealthCheck()
-  SetForegroundWindow(appHwnd)
+  SetForegroundWindow (appHwnd)
   Application.Calculate
 
   If (countPending() + countProcessing()) = 0 Then
@@ -205,7 +205,7 @@ End Function
 ' Trigger fetching procedure for pending items
 ''
 Public Function processRequests()
-  SetForegroundWindow(appHwnd)
+  SetForegroundWindow (appHwnd)
   Dim concurrency As String
   Dim maxConcurrency As Integer
   Dim queueTable As ListObject
@@ -228,7 +228,7 @@ Public Function processRequests()
     Set requestStatus = queueTable.ListColumns("Situação").Range.Find("Pendente", LookIn:=xlValues)
     If requestStatus Is Nothing Then Exit Do
 
-    queueRowId = queueTable.ListRows(requestStatus.Row - queueTable.HeaderRowRange.Row).Index
+    queueRowId = queueTable.ListRows(requestStatus.row - queueTable.HeaderRowRange.row).Index
     Set queueRow = queueTable.ListRows(queueRowId)
 
     Set requestId = queueRow.Range.Cells(1, queueTable.ListColumns("ID").Index)
@@ -258,7 +258,7 @@ End Function
 ' Fulfills an async request by filling the matching queue item with response data
 ''
 Public Function fulfillRequest(Response As WebResponse, requestIdValue As Long)
-  SetForegroundWindow(appHwnd)
+  SetForegroundWindow (appHwnd)
   Dim queueTable As ListObject
   Dim queueRowId As Long
   Dim queueRow As ListRow
@@ -282,7 +282,7 @@ Public Function fulfillRequest(Response As WebResponse, requestIdValue As Long)
   Set queueTable = QueueSheet.getTable()
 
   Set requestId = queueTable.ListColumns("ID").Range.Find(requestIdValue, LookIn:=xlValues)
-  queueRowId = queueTable.ListRows(requestId.Row - queueTable.HeaderRowRange.Row).Index
+  queueRowId = queueTable.ListRows(requestId.row - queueTable.HeaderRowRange.row).Index
   Set queueRow = queueTable.ListRows(queueRowId)
 
   Set requestType = queueRow.Range.Cells(1, queueTable.ListColumns("Tipo").Index)
@@ -361,7 +361,7 @@ End Function
 ' Disables Excel update operations
 ''
 Private Function disableUpdates()
-  SetForegroundWindow(appHwnd)
+  SetForegroundWindow (appHwnd)
   Application.ScreenUpdating = False
   Application.EnableEvents = False
 End Function
@@ -370,7 +370,7 @@ End Function
 ' Re-enables Excel update operations
 ''
 Private Function enableUpdates()
-  SetForegroundWindow(appHwnd)
+  SetForegroundWindow (appHwnd)
   Application.ScreenUpdating = True
   Application.EnableEvents = True
 End Function

@@ -17,7 +17,7 @@ Public Function getTable() As ListObject
   Dim columns() As Variant
   Dim newSheet As Worksheet
 
-  If tableReference is Nothing Then
+  If tableReference Is Nothing Then
     Set tableReference = SheetService.getTable("CNPJA_SOCIOS")
   End If
 
