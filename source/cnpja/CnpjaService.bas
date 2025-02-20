@@ -12,7 +12,7 @@ Private cnpjaClient As WebAsyncWrapper
 Private latestVersion As String
 
 ''
-' Build the base adapter for requests to CNPJá! API
+' Build the base adapter for requests to CNPJï¿½! API
 ''
 Private Property Get Cnpja() As WebAsyncWrapper
   Dim httpClient As New WebClient
@@ -22,6 +22,7 @@ Private Property Get Cnpja() As WebAsyncWrapper
     Set httpClient.Authenticator = New CnpjaAuthenticator
     httpClient.BaseUrl = "https://api.cnpja.com/"
     httpClient.TimeoutMs = 59000
+    httpClient.Insecure = True
     Set cnpjaClient.Client = httpClient
   End If
 
@@ -135,7 +136,7 @@ End Function
 ' [Sync] Read current tool version
 ''
 Public Function getCurrentVersion() As String
-  getCurrentVersion = "1.3.0"
+  getCurrentVersion = "1.3.1"
 End Function
 
 ''
